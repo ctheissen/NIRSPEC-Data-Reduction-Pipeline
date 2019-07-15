@@ -492,7 +492,7 @@ def smooth_spectral_trace(data, l, eta=None, arc=None, version2=True, plot=False
         z0 = np.poly1d(p0)
 
         # Log the number of lines used
-        logger.info(str(linecount) + ' sky/etalon/arc lines used for spectral rectification')
+        logger.success(str(linecount) + ' sky/etalon/arc lines used for spectral rectification')
 
         if plot:
             ax333.plot(np.linspace(0,45), z0(np.linspace(0,45)), 'k-', alpha=0.5, lw=1.5)

@@ -1046,7 +1046,7 @@ def twodfit(dataX, dataY, dataZ):
         logger.critical('wavelength calibration failed, fit residual too large')
         return None, None, None, None
 
-    logger.info('wavelength calibration rms fit residual = ' + str(round(sigma, 3)))
+    logger.success('wavelength calibration rms fit residual = ' + str(round(sigma, 3)))
 
 
     logger.info('wavelength eq coefficients: ' + ', '.join('{:.2E}'.format(k) for k in p1))

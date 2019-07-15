@@ -305,7 +305,7 @@ def reduce_order(order, eta=None, arc=None):
         
     if line_pairs is not None:
         
-        logger.info(str(len(line_pairs)) + ' matched sky/etalon/arc lines found in order')
+        logger.success(str(len(line_pairs)) + ' matched sky/etalon/arc lines found in order')
 
         # add line pairs to Order object as Line objects
         if nirspec_constants.upgrade:
@@ -504,7 +504,7 @@ def __rectify_spatial(order, eta=None, arc=None):
 
 
     order.spatialRectified = True
-    logger.info('order has been rectified in the spatial dimension')
+    logger.success('order has been rectified in the spatial dimension')
         
     return   
  

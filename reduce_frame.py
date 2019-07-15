@@ -629,7 +629,7 @@ def log_start_summary(reduced):
     logger.error('ERROR')
     logger.warning("WARNING")
     logger.critical("CRITICAL")
-    logger.notice("NOTICE")
+    #logger.notice("NOTICE")
     logger.success("SUCCESS")
     sys.exit()
     '''

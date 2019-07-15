@@ -139,6 +139,16 @@ def init(out_dir, in_dir = None):
     # set up main logger
     logger = logging.getLogger('main')
 
+    # Add in the "success" level to logging
+    SUCCESS_LEVEL_NUM = 29 
+    logging.addLevelName(SUCCESS_LEVEL_NUM, "SUCCESS")
+    def successv(self, message, *args, **kws):
+        if self.isEnabledFor(SUCCESS_LEVEL_NUM):
+            # Yes, logger takes its '*args' as 'args'.
+            self._log(SUCCESS_LEVEL_NUM, message, args, **kws) 
+    logging.Logger.success = successv
+
+
     # if NOT command line mode
     if (config.params['cmnd_line_mode'] is False):
         setup_main_logger(logger, in_dir, out_dir)
