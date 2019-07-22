@@ -105,22 +105,27 @@ class ReducedDataSet:
         self.Eta  = None
         self.Arc  = None
         
+        
     def getBaseName(self):
         if self.isPair:
             return(self.baseNames['AB'])
         else:
             return(self.baseNames['A'])
         
+
     def getFileName(self):
         return self.fileName
     
+
     def getTargetName(self):
         #return self.header['TARGNAME']
         return self.header['OBJECT']
     
+
     def getShape(self):
         return self.header['NAXIS1'], self.header['NAXIS2']
-        
+      
+
     def getFilter(self):
         if nirspec_constants.upgrade: 
             filtername1, filtername2 = self.header['SCIFILT2'], ''
@@ -134,6 +139,7 @@ class ReducedDataSet:
             else:
                 return self.header['filname']
         
+
     def getFullFilterName(self):
         if nirspec_constants.upgrade: 
             filtername1, filtername2 = self.header['SCIFILT2'], ''
@@ -142,30 +148,38 @@ class ReducedDataSet:
             return filtername1.upper()+filtername2.upper()
         return self.header['filname']
         
+
     def getEchPos(self):
         return self.header['echlpos']
+
 
     def getDispPos(self):
         return self.header['disppos']
     
+
     def getSlit(self):
         return self.header['slitname']
     
+
     def getITime(self):
         if nirspec_constants.upgrade: 
             return self.header['itime']/1000.
         return self.header['itime']
     
+
     def getNCoadds(self):
         return self.header['coadds']
     
+
     def getDate(self):
         return self.header['DATE-OBS']
     
+
     def getTime(self):
         if nirspec_constants.upgrade: return self.header['UT']
         return self.header['UTC']
     
+
     def getIntegrationTime(self):
         try:
             return self.header['ELAPTIME']
@@ -179,6 +193,7 @@ class ReducedDataSet:
     def getObjectName(self):
         return self.header['OBJECT']
     
+
     def subtractDark(self):   
         """
         Modified from the previous version @Dino Hsu
