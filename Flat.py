@@ -68,7 +68,7 @@ class Flat:
         try:
             self.reduce()
         except Exception as e:
-            self.logger.error('flat reduction failed: ' + e.message)
+            self.logger.error('flat reduction failed: ' + e)
 #             traceback.print_tb()
             raise
         
