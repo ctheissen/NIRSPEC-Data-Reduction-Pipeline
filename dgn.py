@@ -12,7 +12,10 @@ import config
 import nirspec_constants as const
 
 import scipy.misc
-from scipy.misc.pilutil import imresize
+try: 
+    from scipy.misc.pilutil import imresize # deprecated in newer versions of scipy
+except:
+    from skimage.transform import resize as imresize # this is where it exists now
 from astropy.visualization import ZScaleInterval, ImageNormalize
 
 # import Order
