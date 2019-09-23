@@ -29,7 +29,7 @@ class GratingEq:
             #coeffs['NIRSPEC-7'] = { 'c1': 0.376655776, 'c2': -4.22366351e6, 'y0': 2.45448586e6,
             #                        'r1': 0.23482994, 'r2': -33591.707, 'z0': 14891.3158};    
                                           
-            coeffs['NIRSPEC-7'] = { 'c1': 0.366075635, 'c2': -4.13657603e5, 'y0': 2.34143097e5,
+            coeffs['NIRSPEC-7'] = { 'c1': 0.376924640, 'c2': -1.14549849e4, 'y0': -5.13532390e2,
                                     'r1': 0.23482994, 'r2': -33591.707, 'z0': 14891.3158};  
 
             coeffs['NIRSPEC-6'] = { 'c1': 0.24986411, 'c2': -35961.453, 'y0': 15944.8337,
@@ -50,7 +50,7 @@ class GratingEq:
             #coeffs['NIRSPEC-1'] = { 'c1': 0.754348427, 'c2': -1.34342463e6, 'y0': 7.62950418e5,
             #                        'r1': 0.4713783,  'r2': -38876.842, 'z0': 17880.5877}; 
 
-            coeffs['NIRSPEC-1'] = { 'c1': 0.755422321, 'c2': 2.15294367e6, 'y0': 1.23998391e6,
+            coeffs['NIRSPEC-1'] = { 'c1': 0.754607318, 'c2': -2.88170696e6, 'y0': 1.64417296e6,
                                     'r1': 0.4713783,  'r2': -38876.842, 'z0': 17880.5877}; 
 
         else:
@@ -85,9 +85,9 @@ class GratingEq:
         if const.upgrade: 
             pixel = np.arange(const.N_COLS_upgrade, dtype=float)
 
-            k1 = 8.55030015e5 # Found these coeffs empirically using the new format simulator
-            k2 = 1.61866180e1
-            k1, k2 = 8.53904913e5, 1.63484788e1 # New test coeffs
+            #k1 = 8.55030015e5 # Found these coeffs empirically using the new format simulator
+            #k2 = 1.61866180e1
+            k1, k2 = 8.54942246e5, 1.65988312e1 # New test coeffs
         else:
             pixel = np.arange(const.N_COLS, dtype=float)
     
@@ -137,12 +137,12 @@ class GratingEq:
                 #k3 = -3.91408142e6 # Found these coeffs empirically using the new format simulator
                 #k4 = -1.09796060e5
 
-                k3, k4 = 6.51668024e4, 1.82380582e3 # New test coeffs
+                k3, k4 = 6.51668027e4, 1.82380583e3 # New test coeffs
 
                 if 'NIRSPEC-1' in filtername:
-                    k3 = 5.23052614e6
-                    k4 = 1.49654716e5
-                    k3, k4 = -5.31450186e5, -1.52086993e4 # New test coeffs
+                    #k3 = 5.23052614e6
+                    #k4 = 1.49654716e5
+                    k3, k4 = -2.47020399e6, -7.06809106e4 # New test coeffs
                 if 'K-' in filtername:
                     k3 = -3.75106282e6
                     k4 = -1.05224419e5

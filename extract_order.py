@@ -11,7 +11,7 @@ LARGE_TILT_THRESHOLD = 20
 LARGE_TILT_EXTRA_PADDING = 10
 OVERSCAN_WIDTH = 10
 
-def extract_order(order_num, obj, flat, top_calc, bot_calc, filter_name, slit_name):
+def extract_order(order_num, obj, flat, top_calc, bot_calc, filter_name, slit_name, eta=None):
     """
     
     filter and slit arguments are required to select filter and slit-specific 
@@ -43,7 +43,7 @@ def extract_order(order_num, obj, flat, top_calc, bot_calc, filter_name, slit_na
     find_edge_traces(tops, bots, order, slit_name)
     
     if order.topTrace is None and order.botTrace is None:
-        logger.info('could not trace top or bottom of order edge on flat')
+        logger.warning('could not trace top or bottom of order edge on flat')
         return None
     
     if order.botTrace is not None:
@@ -58,12 +58,15 @@ def extract_order(order_num, obj, flat, top_calc, bot_calc, filter_name, slit_na
             order.botTrace += constants.LONG_SLIT_EDGE_MARGIN
     
     # cut out order from object frame and flat and compute on and off order masks
-    cut_out_order(obj, flat, order)
+    if eta is not None:
+        cut_out_order(obj, flat, order, eta=eta)
+    else:
+        cut_out_order(obj, flat, order)
              
     return order
 
 
-def cut_out_order(obj, flat, order):
+def cut_out_order(obj, flat, order, eta=None):
     """
     
     obj - the full frame object image
@@ -95,6 +98,8 @@ def cut_out_order(obj, flat, order):
          
     order.objCutout   = np.array(cut_out(obj, order.highestPoint, order.lowestPoint, order.padding))
     order.flatCutout  = np.array(cut_out(flat, order.highestPoint, order.lowestPoint, order.padding))
+    if eta is not None:
+        order.etaCutout  = np.array(cut_out(eta, order.highestPoint, order.lowestPoint, order.padding))
     order.shiftOffset = order.padding + order.botMeas
     
     if float(order.lowestPoint) > float(order.padding):
@@ -108,6 +113,8 @@ def cut_out_order(obj, flat, order):
         
     order.objCutout  = np.ma.masked_array(order.objCutout, mask=order.offOrderMask)
     order.flatCutout = np.ma.masked_array(order.flatCutout, mask=order.offOrderMask)
+    if eta is not None: 
+    	order.etaCutout = np.ma.masked_array(order.etaCutout, mask=order.offOrderMask)
 
     return
     
@@ -153,11 +160,11 @@ def find_edge_traces(tops, bots, order, slit_name):
         order.avgTrace = (order.topTrace + order.botTrace) / 2.0
 
     elif order.botTrace is None:
-        logger.info('using top trace only')
+        logger.warning('using top trace only')
         order.avgTrace = order.topTrace - ((order.topMeas - order.botCalc) / 2.0) + 1.0
         
     else:
-        logger.info('using bottom trace only')
+        logger.warning('using bottom trace only')
         order.avgTrace = order.botTrace + ((order.topCalc - order.botMeas) / 2.0) + 1.0
         
     return
@@ -173,7 +180,7 @@ def determine_edge_locations(tops, bots, order, min_intensity, max_delta):
         logger.debug('reducing edge detection threshold')
         order.topMeas = find_peak(tops, order.topCalc, min_intensity / 2)
         if order.topMeas is None:
-            logger.info('cannot find top edge of order')
+            logger.warning('cannot find top edge of order')
 
     if order.topMeas is not None:
         if (order.topMeas < 1) or (abs(order.topMeas - order.topCalc) > (max_delta)):
@@ -190,7 +197,7 @@ def determine_edge_locations(tops, bots, order, min_intensity, max_delta):
         logger.info('reducing edge detection threshold')
         order.botMeas = find_peak(bots, order.botCalc, min_intensity / 2) 
         if order.botMeas is None:
-            logger.info('cannot find bottom edge of order')
+            logger.warning('cannot find bottom edge of order')
 
     if order.botMeas is not None:
         if (order.botMeas < 1) or (abs(order.botMeas - order.botCalc) > (max_delta)):

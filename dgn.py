@@ -598,7 +598,7 @@ def skyLinesPlot(outpath, order, eta=None, arc=None):
     else:
         endPix = 1024
 
-    pl.figure('sky/etalon/arc lines', facecolor='white', figsize=(10, 8))
+    pl.figure('sky/etalon/arc lines', facecolor='white', figsize=(14, 8))
     pl.cla()
     pl.suptitle("sky/etalon/arc lines" + ', ' + order.baseNames['A'] + ", order " + 
             str(order.flatOrder.orderNum), fontsize=14)
@@ -643,22 +643,25 @@ def skyLinesPlot(outpath, order, eta=None, arc=None):
     
     ymin, ymax = sky_plot.get_ylim()
     dy = (ymax - ymin) / 4
-    y  = ymin + dy/8
+    y  = ymin + dy/7
+    sky_plot.plot([0,0], [0,0], 'k--', label='Accepted', linewidth=0.5)
+    sky_plot.plot([0,0], [0,0], 'r:', label='Outlier', linewidth=0.5)
     for line in order.lines:
         if line.frameFitOutlier == False:
             c = 'k--'
         else:
-            c = 'r--'
+            c = 'r:'
         sky_plot.plot([line.col, line.col], [ymin, ymax], c, linewidth=0.5)
-        pl.annotate(str(line.waveAccepted), (line.col, y), size=8)
+        pl.annotate(str(line.waveAccepted), (line.col, y), size=7)
         pl.annotate(str(line.col) + ', ' + '{:.3f}'.format(
-                order.flatOrder.gratingEqWaveScale[line.col]), (line.col, y + (dy / 4)), size=8)
+                order.flatOrder.gratingEqWaveScale[line.col]), (line.col, y + (dy / 4)), size=7)
         y += dy
         if y > (ymax - dy):
-            y = ymin + dy/8
+            y = ymin + dy/7
 
     syn_plot.minorticks_on()
     sky_plot.minorticks_on()
+    sky_plot.legend()
     fn = constructFileName(outpath, order.baseNames['A'], order.flatOrder.orderNum, 'skylines.png')
         
     pl.savefig(fn, bbox_inches='tight')

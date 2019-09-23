@@ -67,7 +67,9 @@ def trace_edge(data, start, searchWidth, bgWidth, jumpThresh, plot=False):
                 data[int(ymin):int(ymax) + 1, i] - bgMean)[0] + ymin
         #print('1', trace[i])
 
-        if plot and searchWidth==3:
+        plotwidth = 3  # This is for order edges
+        #plotwidth = 11 # This is for sky lines and etalons
+        if plot and searchWidth==plotwidth:
             import pylab as pl
             x0 = max(0, int(trace[i - 1]) - 50)
             x1 = min(data.shape[0]-1, int(trace[i-1]) + 50)

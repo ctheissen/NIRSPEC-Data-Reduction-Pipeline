@@ -127,14 +127,14 @@ class FlatCacher:
                 self.logger.info('cosmic cleaning flat because < 3 flats were median combined')
                 data = image_lib.cosmic_clean(data)
                 hdr['CLEANED'] = 'yes'
-                self.logger.info('cosmic ray cleaning complete')
+                self.logger.success('cosmic ray cleaning complete')
         
         else:
             # Cosmic ray clean anyways
             self.logger.info('cosmic cleaning flat')
             data = image_lib.cosmic_clean(data)
             hdr['CLEANED'] = 'yes'
-            self.logger.info('cosmic ray cleaning complete')
+            self.logger.success('cosmic ray cleaning complete')
          
         return(fits.PrimaryHDU(data, hdr))
         

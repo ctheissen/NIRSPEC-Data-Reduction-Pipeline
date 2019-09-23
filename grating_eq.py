@@ -71,14 +71,14 @@ def evaluate(order, filtername, slit, echlpos, disppos, dateobs=None):
         
     # apply empirical corrections
     
-    long_slit_y_corr = 20
+    long_slit_y_corr    = 20
     low_res_slit_y_corr = 30
-#     date_y_corr = 50
-    date_y_corr = 0
-    filter_7_y_corr = 45
+#     date_y_corr        = 50
+    date_y_corr         = 0
+    filter_7_y_corr     = 45
     filter_4_5_6_y_corr = 30
-    filter_3_y_corr = 50
-    filter_1_y_corr = 50
+    filter_3_y_corr     = 50
+    filter_1_y_corr     = 50
 
     if '24' in slit:
         
@@ -110,11 +110,11 @@ def evaluate(order, filtername, slit, echlpos, disppos, dateobs=None):
         left_bot_row -= low_res_slit_y_corr
         
     elif '2.26' in slit:
-        logger.debug ('applying x2.26 AO slit correction')
+        logger.debug('applying x2.26 AO slit correction')
         left_bot_row = left_top_row - ((left_top_row - left_bot_row) * 2)
         
     elif '1.13' in slit:
-        logger.debug ('applying no correction for x1.13 AO slit correction')
+        logger.debug('applying no correction for x1.13 AO slit correction')
         
     if dateobs is not None:
         obs_date = datetime.datetime.strptime(dateobs, '%Y-%m-%d')

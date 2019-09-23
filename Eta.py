@@ -67,7 +67,7 @@ class Eta:
     def reduce(self):
         """
         """
-        self.logger.info('reducing flat {}'.format(self.baseName))
+        self.logger.info('reducing etalon {}'.format(self.baseName))
         
         self.findEdgeProfilePeaks()
         
@@ -76,7 +76,7 @@ class Eta:
         
         for orderNum in range(config.get_starting_order(self.filterName), 0, -1):
             
-            self.logger.info('***** flat order {} *****'.format(orderNum))
+            self.logger.info('***** eta order {} *****'.format(orderNum))
 
             flatOrder = FlatOrder.FlatOrder(self.baseName, orderNum, self.logger)
             

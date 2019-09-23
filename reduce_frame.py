@@ -1,5 +1,6 @@
-import os
+import os, sys
 import logging
+import coloredlogs
 import numpy as np
 from astropy.io import fits
 
@@ -17,6 +18,7 @@ import imp
 import fixpix
 import nirspec_constants
 
+#logging.setLoggerClass(nsdrp.ColoredLogger)
 logger = logging.getLogger('obj')
 # main_logger = logging.getLogger('main')
 # main_logger = logging.getLogger('main')
@@ -275,11 +277,12 @@ def reduce_orders(reduced, eta=None, arc=None):
         if flatOrder.valid is not True:
             continue        
         
-        logger.info('*********** ORDER ' + str(flatOrder.orderNum) + ' ***********')
+        logger.info('*'*20 + ' ORDER {} '.format(flatOrder.orderNum) + '*'*20)
 
         #if flatOrder.orderNum != 32: continue #XXX
         #if flatOrder.orderNum != 33: continue #XXX
         #if flatOrder.orderNum != 37: continue #XXX
+        #if flatOrder.orderNum != 68: continue #XXX
             
         order = Order.Order(reduced.frames, reduced.baseNames, flatOrder, etaImg=reduced.etaImg)
         
@@ -300,8 +303,47 @@ def reduce_orders(reduced, eta=None, arc=None):
             plt.show()
             '''
             ### TESTING
+
+
+            ### TEST to mask out pixels outside of trace
+            # Mask out the pixels above and below the trace
+            #onOrderMask, offOrderMask = Flat.get_masks(
+            #        flatOrder.cutout.shape, flatOrder.topEdgeTrace, flatOrder.botEdgeTrace)
+            if float(flatOrder.lowestPoint) > float(flatOrder.cutoutPadding):
+                onOrderMask, offOrderMask = Flat.get_masks(
+                        flatOrder.cutout.shape, 
+                        flatOrder.topEdgeTrace - flatOrder.lowestPoint + flatOrder.cutoutPadding, 
+                        flatOrder.botEdgeTrace - flatOrder.lowestPoint + flatOrder.cutoutPadding)
+            else:
+                onOrderMask, offOrderMask = Flat.get_masks(
+                    flatOrder.cutout.shape, flatOrder.topEdgeTrace, flatOrder.botEdgeTrace)
+            ### TEST to mask out pixels outside of trace
+
+
             order.objCutout[frame] = np.array(image_lib.cut_out(reduced.objImg[frame], 
                     flatOrder.highestPoint, flatOrder.lowestPoint, flatOrder.cutoutPadding))  
+            '''
+            import matplotlib.pyplot as plt
+            plt.figure(64781)
+            plt.imshow(order.objCutout[frame], origin='lower', aspect='auto')
+            #plt.plot(np.arange(2048), topTrace, c='b', ls=':')
+            #plt.plot(np.arange(2048), botTrace, c='r', ls=':')
+            #plt.axhline(top, c='b', ls='--')
+            #plt.axhline(bot, c='r', ls='--')
+            plt.show(block=False)
+            '''
+
+            order.objCutout[frame] = np.ma.masked_array(order.objCutout[frame], mask=offOrderMask)
+
+            '''
+            plt.figure(64782)
+            plt.imshow(order.objCutout[frame], origin='lower', aspect='auto')
+            #plt.plot(np.arange(2048), topTrace, c='b', ls=':')
+            #plt.plot(np.arange(2048), botTrace, c='r', ls=':')
+            #plt.axhline(top, c='b', ls='--')
+            #plt.axhline(bot, c='r', ls='--')
+            plt.show()
+            '''
 
         if eta is not None:
             order.etaCutout = np.array(image_lib.cut_out(reduced.etaImg, 
@@ -508,8 +550,7 @@ def init(baseName, out_dir):
     logger.handlers = []
     if config.params['debug']:
         logger.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s ' +
-                '%(levelname)s - %(filename)s:%(lineno)s - %(message)s')
+        formatter = logging.Formatter('%(asctime)s %(levelname)s - %(filename)s:%(lineno)s - %(message)s')
     else:
         logger.setLevel(logging.INFO)
         formatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s')
@@ -527,17 +568,21 @@ def init(baseName, out_dir):
         
     if os.path.exists(fn):
         os.rename(fn, fn + '.prev')
-        
+
     fh = logging.FileHandler(filename=fn)
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
-    
+
     if config.params['verbose'] is True:
         if config.params['debug']:
-            sformatter = logging.Formatter('%(asctime)s %(levelname)s - %(filename)s:%(lineno)s - %(message)s')
+            #sformatter = logging.Formatter('%(asctime)s %(levelname)s - %(filename)s:%(lineno)s - %(message)s')
+            sformatter = coloredlogs.ColoredFormatter(fmt='%(asctime)s,%(msecs)03d %(levelname)s - %(filename)s:%(lineno)s - %(message)s',
+                                                field_styles={'levelname': {'color': 'cyan'}})
         else:
-            sformatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s')
+            #sformatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s')
+            sformatter = coloredlogs.ColoredFormatter(fmt='%(asctime)s,%(msecs)03d %(levelname)s - %(message)s',
+                                                field_styles={'levelname': {'color': 'cyan'}})
         sh = logging.StreamHandler()
         sh.setLevel(logging.DEBUG)
         sh.setFormatter(sformatter)
@@ -579,6 +624,15 @@ def log_start_summary(reduced):
         logging.getLogger(l).log(INFO, 'n coadds = ' + str(reduced.getNCoadds()))
     logger.info('echelle angle = ' + str(reduced.getEchPos()) + ' deg')
     logger.info('cross disperser angle = ' + str(reduced.getDispPos()) + ' deg')
+    '''
+    logger.debug('DEBUG')
+    logger.error('ERROR')
+    logger.warning("WARNING")
+    logger.critical("CRITICAL")
+    #logger.notice("NOTICE")
+    logger.success("SUCCESS")
+    sys.exit()
+    '''
     return
 
 

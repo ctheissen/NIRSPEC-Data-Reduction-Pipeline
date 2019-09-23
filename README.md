@@ -1,6 +1,6 @@
-# nsdrp (modified by Dino Hsu)
+# nsdrp (modified by Chris Theissen & Dino Hsu)
 
-This version is modified by Dino Hsu. This includes some bugs fixed in Python 3, with the modifications mentioned in the codes. Ideally, this version of NSDRP needs to be processed together with [nirspec_pip](https://github.com/chihchunhsu/nirspec_pip).
+This version is modified by Chris Theissen & Dino Hsu. This includes some bugs fixed in Python 3, with the modifications mentioned in the codes. Ideally, this version of NSDRP needs to be processed together with [nirspec_pip](https://github.com/chihchunhsu/nirspec_pip).
 
 PREREQUISITES:
 
@@ -8,7 +8,7 @@ PREREQUISITES:
 
 2)    Verify correct installation by typing "python" on the command line. The terminal will display the version number and the distribution, i.e. Python2.7.8, Anaconda 2.1.0, etc. To verify installation of the required python modules, please refer to step one in the EXECUTING NSDRP section below.
 
-3)    The NSDRP software is maintained on GitHub. Download the code from https://github.com/Keck-DataReductionPipelines/NIRSPEC-Data-Reduction-Pipeline.git 
+3)    The NSDRP software is maintained on GitHub. Download the code from https://github.com/ctheissen/NIRSPEC-Data-Reduction-Pipeline.git 
 and install by decompressing the folder in the directory of your choice.
 
 CONSTRAINTS:
@@ -56,4 +56,10 @@ EXECUTING NSDRP:
     
       Additional command line arguments are available. These are listed and described after executing: 
       python nsdrp.py -h
+
+3)   Beta stage for upgraded NIRSPEC
+
+      Changes have been made to make the latest version compatible with the upgraded NIRSEPC (end of 2018). 
+      Wavelength solutions may or may not be accurate, contact Chris Theissen for more info.
+      Additional testing for KOA mode is needed. Best results are given we used in AB pair mode.
 

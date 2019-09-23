@@ -51,16 +51,16 @@ def create(in_dir):
 #            logger.info('Ignored {} files because they are not object frames'.format(
 #                    failed2reduce.get('itype')))
         if failed2reduce.get('dismode') is not None:
-            logger.info('Failed to reduced {} files because of low dispersion mode'.format(
+            logger.warning('Failed to reduced {} files because of low dispersion mode'.format(
                     failed2reduce.get('dispmode')))
         elif failed2reduce.get('n1') is not None:
-            logger.info('Failed to reduced {} files because NAXIS1 != 1024 or 2048'.format(
+            logger.warning('Failed to reduced {} files because NAXIS1 != 1024 or 2048'.format(
                     failed2reduce.get('n1')))
         elif failed2reduce.get('n2') is not None:
-            logger.info('Failed to reduced {} files because NAXIS2 != 1024 or 2048'.format(
+            logger.warning('Failed to reduced {} files because NAXIS2 != 1024 or 2048'.format(
                     failed2reduce.get('n2')))
         elif failed2reduce.get('fil') is not None:
-            logger.info('Failed to reduce {} files because of unsupported filter'.format(
+            logger.warning('Failed to reduce {} files because of unsupported filter'.format(
                     failed2reduce.get('fil')))
         else:
             pass
@@ -135,7 +135,7 @@ def get_headers(in_dir):
             if config.params['gunzip'] is True and filename.endswith('gz'):
                 os.system('gunzip ' + full_filename)
                 full_filename = full_filename.rstrip('.gz')
-            headers[full_filename] = fits.getheader(full_filename)
+            headers[full_filename] = fits.getheader(full_filename, ignore_missing_end=True)
         
     return headers
 
@@ -161,10 +161,10 @@ def obj_criteria_met(header, failed2reduce):
         if header['IMAGETYP'].lower() != 'object':
 #           failed2reduce['itype'] += 1
             return False
-    if config.params['cmnd_line_mode'] == False:
-        if header['DISPERS'].lower() != 'high':
-            failed2reduce['dispmode'] += 1
-            return False
+    #if config.params['cmnd_line_mode'] == False:
+    #    if header['DISPERS'].lower() != 'high':
+    #        failed2reduce['dispmode'] += 1
+    #        return False
     if header['NAXIS1'] != nirspec_constants.N_COLS:
         failed2reduce['n1'] += 1
         return False
@@ -251,11 +251,15 @@ def dark_criteria_met(obj_header, dark_header):
         
     return
         True if the dark corresponds to the object frame, False otherwise.
-        
+       
+    Deprecated. We don't use this criteria,
+    @ Dino Hsu 
     """
+    '''
     #eq_kwds = ['elaptime']
     eq_kwds = ['echlpos', 'filname', 'slitname']
     for kwd in eq_kwds:
         if obj_header[kwd] != dark_header[kwd]:
             return False
+    '''
     return True

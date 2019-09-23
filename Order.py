@@ -44,9 +44,11 @@ class Order:
         for frame in self.frames:
             self.spectralTrace[frame] = []
                             
-        self.objCutout = {}
+        self.objCutout   = {}
+        self.ffObjCutout = {}
         for frame in self.frames:
-            self.objCutout[frame] = []
+            self.objCutout[frame]   = []
+            self.ffObjCutout[frame] = []
 
         if etaImg is not None:
             self.etaImg    = etaImg
@@ -59,7 +61,7 @@ class Order:
             self.arcCutout = []
 
         
-        self.onOrderMask = []
+        self.onOrderMask  = []
         self.offOrderMask = []
        
         #
@@ -81,7 +83,7 @@ class Order:
         
         self.frameCalWaveScale = []  # wavelength scale based on per-frame fit
 
-        self.mfCalScale = []
+        self.mfCalScale        = []
         
 #         self.topEdgeProfiles = None
 #         self.botEdgeProfiles = None
@@ -91,15 +93,15 @@ class Order:
         self.spatialRectified  = False
         self.spectralRectified = False
 
-        self.flatMean = 0.0
+        self.flatMean          = 0.0
         
         """
         
         """
-        self.flatImg = []        
+        self.flatImg           = []        
         self.normalizedFlatImg = []    
         
-        self.objImg = {}
+        self.objImg   = {}
         self.ffObjImg = {}
         
         for frame in self.frames:
@@ -203,13 +205,13 @@ class Order:
             botSkyWindow: Window for extracting bottom (lower row numbers) sky window.
                 Always refers to frame A.
         """        
-        self.objWindow = {}
+        self.objWindow    = {}
         self.topSkyWindow = {}
         self.botSkyWindow = {}
         
         self.topBgMean = {}
         self.botBgMean = {}
-        self.snr = {}
+        self.snr       = {}
         
         self.objSpec = {}
         self.skySpec = {}
@@ -219,15 +221,15 @@ class Order:
             if frame == 'AB':
                 self.topSkyWindow[frame] = None
                 self.botSkyWindow[frame] = None
-                self.skySpec[frame] = None
+                self.skySpec[frame]      = None
             else:
                 self.topSkyWindow[frame] = []
                 self.botSkyWindow[frame] = []
-                self.skySpec[frame] = []
+                self.skySpec[frame]      = []
             self.topBgMean[frame] = None
             self.botBgMean[frame] = None
-            self.snr[frame] = None
-            self.objSpec[frame] = []
+            self.snr[frame]       = None
+            self.objSpec[frame]   = []
         """
         
         """

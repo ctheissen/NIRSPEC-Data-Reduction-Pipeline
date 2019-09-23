@@ -1,5 +1,6 @@
 # Ignore files with the following extensions
 *.pyc
+*.DS_Store
 
 # Ignore the following directories
 __pycache__/

@@ -44,7 +44,12 @@ params['large_tilt_threshold']     = 20
 params['large_tilt_extra_padding'] = 10
 params['overscan_width']           = 10
 
+params['extra_cutout'] = False  # do not do any extra trimming
+
 params['sowc'] = False  # simple order width calculation
+
+params['log_dir']  = False  # log directory
+params['log_file'] = False  # full path to the log file
 
 
 # expected order number at bottom of detector
@@ -86,24 +91,35 @@ def get_max_edge_location_error(filtername, slit):
     
 # order cutout padding
 long_slit_cutout_padding = {
-        'NIRSPEC-1': 0, 
-        'NIRSPEC-2': 0, 
-        'NIRSPEC-3': 0, 
-        'NIRSPEC-4': 0, 
-        'NIRSPEC-5': 0, 
-        'NIRSPEC-6': 1, 
-        'NIRSPEC-7': 3,
-        'K-AO': 0        
+    'NIRSPEC-1': 0, 
+    'NIRSPEC-2': 0, 
+    'NIRSPEC-3': 0, 
+    'NIRSPEC-4': 0, 
+    'NIRSPEC-5': 0, 
+    'NIRSPEC-6': 1, 
+    'NIRSPEC-7': 3,
+    'K-AO': 0        
 }
 short_slit_cutout_padding = {
-        'NIRSPEC-1': 0, 
-        'NIRSPEC-2': 0, 
-        'NIRSPEC-3': 1, 
-        'NIRSPEC-4': 1, 
-        'NIRSPEC-5': 1, 
-        'NIRSPEC-6': 1, 
-        'NIRSPEC-7': 3,
-        'K-AO': 0          
+    'NIRSPEC-1': 0, 
+    'NIRSPEC-2': 0, 
+    'NIRSPEC-3': 1, 
+    'NIRSPEC-4': 1, 
+    'NIRSPEC-5': 1, 
+    'NIRSPEC-6': 1, 
+    'NIRSPEC-7': 3,
+    'K-AO': 0          
+}
+
+extra_cutout = {
+    'NIRSPEC-1': 10, 
+    'NIRSPEC-2': 10, 
+    'NIRSPEC-3': 10, 
+    'NIRSPEC-4': 10, 
+    'NIRSPEC-5': 10, 
+    'NIRSPEC-6': 10, 
+    'NIRSPEC-7': 10,
+    'K-AO': 10          
 }
 
 def get_cutout_padding(filtername, slit):
@@ -111,4 +127,9 @@ def get_cutout_padding(filtername, slit):
         return(long_slit_cutout_padding[filtername.upper()[:9]])
     else:
         return(short_slit_cutout_padding[filtername.upper()[:9]])
+
+
+def get_extra_cutout(filtername, slit):
+    return(extra_cutout[filtername.upper()[:9]])
+
     

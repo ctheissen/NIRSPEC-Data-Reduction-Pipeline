@@ -15,16 +15,16 @@ class Line:
 
 
         # per-order fit results
-        self.orderWaveFit = 0.0         # wavelength of line based on per order fit (Angstroms)
-        self.orderFitRes = 0.0          # fit residual (Angstroms)
+        self.orderWaveFit  = 0.0        # wavelength of line based on per order fit (Angstroms)
+        self.orderFitRes   = 0.0        # fit residual (Angstroms)
         self.orderFitSlope = 0.0        # slope of per-order WL equation at this wavelength
                                         # (Angstroms/pixel)
         self.orderFitOutlier = False    # true if line discarded from per-order fit as outlier
  
  
         # per-frame fit results
-        self.frameWaveFit = 0.0         # wavelength of line based on per-frame fit (Angstroms)
-        self.frameFitRes = 0.0          # fit residual (Angstroms)
+        self.frameWaveFit  = 0.0        # wavelength of line based on per-frame fit (Angstroms)
+        self.frameFitRes   = 0.0        # fit residual (Angstroms)
         self.frameFitSlope = 0.0        # slope of per-frame WL equation at this WL
                                         # (Angstroms/pixel)
         self.frameFitOutlier = True     # true if line discarded from per-frame fit as outlier

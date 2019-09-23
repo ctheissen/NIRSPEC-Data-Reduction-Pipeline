@@ -158,13 +158,14 @@ class RawDataSet:
         """
         if len(self.etaFns) == 0:
             return None
-        if len(self.eatFns) == 1:
+        if len(self.etaFns) == 1:
             return(fits.getdata(self.etaFns[0], ignore_missing_end=True))
-        if len(self.eatFns) > 1:
+        if len(self.etaFns) > 1:
             etaData = []
             for fn in self.etaFns:
                 etaData.append(fits.getdata(fn, ignore_missing_end=True))   
             return np.median(etaData, axis=0)
+
 
     def combineArcs(self):   # XXX This is not working yet    
         """Median combines Arc lamps and returns resulting image array

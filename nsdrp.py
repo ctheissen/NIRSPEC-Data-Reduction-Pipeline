@@ -9,6 +9,7 @@ import argparse
 import sys
 import traceback
 import logging
+import coloredlogs
 from astropy.io import fits
 import warnings
 
@@ -21,7 +22,7 @@ import nsdrp_koa
 #from DrpException import DrpException
 #import FlatCacher
 
-VERSION = '0.9.17.5'
+VERSION = '0.9.17.c8'
 
 warnings.filterwarnings('ignore', category=UserWarning, append=True)
 
@@ -40,54 +41,55 @@ def main():
         fits.PrimaryHDU.readfrom(args.arg2, ignore_missing_end=True)
     except IOError:
         # these aren't FITS files so must be in KOA mode
-        print('KOA mode')
+        print('*'*20 + 'KOA mode' + '*'*20)
     else:
         # command line mode
-        config.params['cmnd_line_mode']        = True
-        config.params['verbose']               = True
+        config.params['cmnd_line_mode']         = True
+        config.params['verbose']                = True
 
     # setup configuration parameters based on command line args
-    config.params['debug']                     = args.debug
-    config.params['verbose']                   = args.verbose
-    config.params['subdirs']                   = args.subdirs
-    config.params['dgn']                       = args.dgn
-    config.params['npy']                       = args.npy
-    config.params['no_cosmic']                 = args.no_cosmic
-    config.params['no_products']               = args.no_products
-    config.params['no_clean']                  = args.no_clean
-    config.params['onoff']                     = args.onoff
+    config.params['debug']                      = args.debug
+    config.params['verbose']                    = args.verbose
+    config.params['subdirs']                    = args.subdirs
+    config.params['dgn']                        = args.dgn
+    config.params['npy']                        = args.npy
+    config.params['no_cosmic']                  = args.no_cosmic
+    config.params['no_products']                = args.no_products
+    config.params['no_clean']                   = args.no_clean
+    config.params['onoff']                      = args.onoff
     if args.obj_window is not None:
-        config.params['obj_window']            = int(args.obj_window)
+        config.params['obj_window']             = int(args.obj_window)
     if args.sky_window is not None:
-        config.params['sky_window']            = int(args.sky_window)
+        config.params['sky_window']             = int(args.sky_window)
     if args.sky_separation is not None:
-        config.params['sky_separation']        = int(args.sky_separation)
+        config.params['sky_separation']         = int(args.sky_separation)
     if args.oh_filename is not None:
-        config.params['oh_filename']           = args.oh_filename
-        config.params['oh_envar_override']     = True
+        config.params['oh_filename']            = args.oh_filename
+        config.params['oh_envar_override']      = True
     if args.eta_filename is not None:
-        config.params['eta_filename']          = args.eta_filename
-        config.params['etalon_filename']       = args.etalon_filename
-        config.params['etalon_envar_override'] = True
+        config.params['eta_filename']           = args.eta_filename
+        config.params['etalon_filename']        = args.etalon_filename
+        config.params['etalon_envar_override']  = True
     if args.arc_filename is not None:
         config.params['arc_filename']           = args.arc_filename
         config.params['arclamp_filename']       = args.arclamp_filename
         config.params['arclamp_envar_override'] = True
-    config.params['dark_file']                 = args.dark_filename
-    config.params['int_c']                     = args.int_c
-    config.params['lla']                       = args.lla
-    config.params['pipes']                     = args.pipes
-    config.params['shortsubdir']               = args.shortsubdir
+    config.params['dark_file']                  = args.dark_filename
+    config.params['int_c']                      = args.int_c
+    config.params['lla']                        = args.lla
+    config.params['pipes']                      = args.pipes
+    config.params['shortsubdir']                = args.shortsubdir
     if args.ut is not None:
-        config.params['ut']                    = args.ut
-    config.params['gunzip']                    = args.gunzip
-    config.params['spatial_jump_override']     = args.spatial_jump_override
+        config.params['ut']                     = args.ut
+    config.params['gunzip']                     = args.gunzip
+    config.params['spatial_jump_override']      = args.spatial_jump_override
     if args.out_dir is not None:
-        config.params['out_dir']               = args.out_dir
-    config.params['jpg']                       = args.jpg
-    config.params['override_ab']               = args.override_ab
-    config.params['debug_tracing']             = args.debug_tracing
-    config.params['sowc']                      = args.sowc;
+        config.params['out_dir']                = args.out_dir
+    config.params['jpg']                        = args.jpg
+    config.params['override_ab']                = args.override_ab
+    config.params['extra_cutout']               = args.extra_cutout
+    config.params['debug_tracing']              = args.debug_tracing
+    config.params['sowc']                       = args.sowc;
 
     # initialize environment, setup main logger, check directories
 #     try:
@@ -127,6 +129,7 @@ def init(out_dir, in_dir = None):
             raise IOError(msg)
     if config.params['subdirs'] is False and config.params['cmnd_line_mode'] is False:
         log_dir = out_dir + '/log'
+        config.params['log_dir'] = log_dir
         if not os.path.exists(log_dir):
             try:
                 os.makedirs(log_dir)
@@ -135,6 +138,18 @@ def init(out_dir, in_dir = None):
         
     # set up main logger
     logger = logging.getLogger('main')
+
+    # Add in the "success" level to logging
+    SUCCESS_LEVEL_NUM = 29 
+    logging.addLevelName(SUCCESS_LEVEL_NUM, "SUCCESS")
+    def successv(self, message, *args, **kws):
+        if self.isEnabledFor(SUCCESS_LEVEL_NUM):
+            # Yes, logger takes its '*args' as 'args'.
+            self._log(SUCCESS_LEVEL_NUM, message, args, **kws) 
+    logging.Logger.success = successv
+
+
+    # if NOT command line mode
     if (config.params['cmnd_line_mode'] is False):
         setup_main_logger(logger, in_dir, out_dir)
     
@@ -151,15 +166,17 @@ def init(out_dir, in_dir = None):
 
     return
 
+
 def setup_main_logger(logger, in_dir, out_dir):
+
     if config.params['debug']:
         logger.setLevel(logging.DEBUG)
+        formatter  = logging.Formatter('%(asctime)s %(levelname)s - %(filename)s:%(lineno)s - %(message)s')
+        sformatter = logging.Formatter('%(asctime)s %(levelname)s - %(filename)s:%(lineno)s - %(message)s')
     else:
         logger.setLevel(logging.INFO)
-    if config.params['debug']:
-        formatter = logging.Formatter('%(asctime)s %(levelname)s - %(filename)s:%(lineno)s - %(message)s')
-    else:
-        formatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s')
+        formatter  = logging.Formatter('%(asctime)s %(levelname)s - %(message)s')
+        sformatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s')
      
     log_fn = get_log_fn(in_dir, out_dir)
              
@@ -170,12 +187,7 @@ def setup_main_logger(logger, in_dir, out_dir):
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
-     
-    if config.params['debug']:
-        sformatter = logging.Formatter('%(asctime)s %(levelname)s - %(filename)s:%(lineno)s - %(message)s')
-    else:   
-        sformatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s')
- 
+        
     if config.params['verbose'] is True:
         sh = logging.StreamHandler()
         sh.setLevel(logging.DEBUG)
@@ -204,6 +216,9 @@ def get_log_fn(in_dir, out_dir):
         if log_fn is None:
             # if all else fails, use canned log file name
             log_fn = out_dir + '/nsdrp.log'
+
+    config.params['log_file'] = log_fn
+    print('LOG FILE NAME:', log_fn)
             
     if config.params['subdirs'] is False:
         # if not in "subdirs" mode than put log file in log subdirectory
@@ -212,6 +227,8 @@ def get_log_fn(in_dir, out_dir):
         log_fn = '/'.join(parts)
         
     return(log_fn)
+
+
 
 def parse_cmnd_line_args():
     # parse command line arguments
@@ -286,6 +303,7 @@ def parse_cmnd_line_args():
             action='store_true')
     parser.add_argument('-sowc', help='enable simple order width calculation', action='store_true')
     parser.add_argument('-override_ab', help='removes AB pair check for the same object', action='store_true')
+    parser.add_argument('-extra_cutout', help='trim more of the order edges', action='store_true')
     parser.add_argument('-debug_tracing', help='debug order tracing', action='store_true')
 
     return(parser.parse_args())

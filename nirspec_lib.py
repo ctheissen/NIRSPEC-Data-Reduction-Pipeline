@@ -48,6 +48,8 @@ ORDER_EDGE_BG_WIDTH     = 30
 ORDER_EDGE_JUMP_THRESH  = 1.9
 ORDER_EDGE_JUMP_LIMIT   = 200
 
+
+
 def trace_order_edge(data, start):
 
     ORDER_EDGE_SEARCH_WIDTH = 10
@@ -95,7 +97,7 @@ def trace_order_edge(data, start):
                     return None
                 
                 if nJumps > ORDER_EDGE_JUMP_LIMIT:
-                    logger.info('order edge trace jump limit exceeded: n jumps=' + 
+                    logger.warning('order edge trace jump limit exceeded: n jumps=' + 
                             str(nJumps) + ' limit=' + str(ORDER_EDGE_JUMP_LIMIT))
                     if config.params['spatial_jump_override'] is True:
                         logger.warning('spatial jump override enabled, edge not rejected')
@@ -175,6 +177,8 @@ SKY_SIGMA           = 1.1
 EXTRA_PADDING       = 5
 MIN_LINE_SEPARATION = 5
 
+
+
 def find_spectral_trace(data, numrows=5, eta=None, arc=None, plot=False):
     """
     Locates sky/etalon lines in the bottom 5 rows (is this really optimal?) of the order image data. 
@@ -195,10 +199,11 @@ def find_spectral_trace(data, numrows=5, eta=None, arc=None, plot=False):
     crit_val = np.median(data_t) # Get a value for the background
     #print('Crit', crit_val, 2*crit_val)
 
+    # This is a check to see if we should use the front rows or a few rows in
     if len(np.where(data_t[:, 0:numrows].flatten() > 2*crit_val)[0]) > 1000: 
-        s = np.sum(data_t[:, -numrows:], axis=1)
+        s = np.sum(data_t[:, numrows:numrows*2], axis=1) # This is a few rows in
     else:
-        s = np.sum(data_t[:, 0:numrows], axis=1)
+        s = np.sum(data_t[:, 0:numrows], axis=1) # This is the first few rows
 
     if plot:
         import pylab as pl
@@ -207,13 +212,14 @@ def find_spectral_trace(data, numrows=5, eta=None, arc=None, plot=False):
         pl.figure(facecolor='white')
         pl.cla()
         pl.plot(s, 'k-')
-        pl.axhline(SKY_SIGMA * np.median(s), c='r', ls=':')
-        pl.axhline(2.25 * np.median(s), c='b', ls=':')
+        pl.axhline(SKY_SIGMA * np.median(s), c='r', ls=':', label='sigma * median')
+        pl.axhline(2.25 * np.median(s), c='b', ls=':', label='2.25 * median')
         pl.xlim(0, data_t.shape[0])
         pl.xlabel('column (pixels)')
         pl.ylabel('intensity summed over 5 rows (DN)')
         ymin, ymax = pl.ylim()
         pl.ylim(0, ymax)
+        pl.legend()
         pl.show()
 
     # finds column indices of maxima
@@ -231,7 +237,6 @@ def find_spectral_trace(data, numrows=5, eta=None, arc=None, plot=False):
 
     # indices in s or peaks
     maxes = np.array(maxima_c[0][locmaxes[0]])
-    #print('MAXES0', maxes)
 
     logger.debug('n sky/etalon/arc line peaks with intensity > {:.0f} = {}'.format(
                 sky_thres, len(maxes)))
@@ -296,6 +301,12 @@ def find_spectral_trace(data, numrows=5, eta=None, arc=None, plot=False):
         pl.ylabel('intensity summed over 5 rows (DN)')
         ymin, ymax = pl.ylim()
         pl.ylim(0, ymax)
+        #pl.show()
+        for max1 in maxes: pl.axvline(max1, color='b', ls='--', alpha=0.5, lw=0.5)
+
+        pl.figure(27847)
+        pl.imshow(data_t, origin='lower', aspect='auto')
+        for max1 in maxes: pl.axhline(max1, color='r', ls='--', alpha=0.5, lw=0.5)
         pl.show()
     
     centroid_sky_sum = np.zeros(data_t.shape[1])
@@ -422,7 +433,10 @@ def smooth_spectral_trace(data, l, eta=None, arc=None, version2=True, plot=False
             # Get the RMS of the line for later filtering (> 0.15 pixels)
             # This is a sign that we did not resolve doublets or lines got noisy at ends
             rmse = np.sqrt(np.mean((centroids - z0(Pixels))**2))
-            logger.debug('RMSE of the line is {:.3f} pixels'.format(rmse))
+            if rmse > 0.15: 
+            	logger.debug('RMSE of the line is {:.3f} pixels (outlier)'.format(rmse))
+            else:
+            	logger.debug('RMSE of the line is {:.3f} pixels'.format(rmse))
             if rmse > 0.15: continue
 
             PlotPix.append(Pixels)
@@ -478,7 +492,7 @@ def smooth_spectral_trace(data, l, eta=None, arc=None, version2=True, plot=False
         z0 = np.poly1d(p0)
 
         # Log the number of lines used
-        logger.info(str(linecount) + ' sky/etalon/arc lines used for spectral rectification')
+        logger.success(str(linecount) + ' sky/etalon/arc lines used for spectral rectification')
 
         if plot:
             ax333.plot(np.linspace(0,45), z0(np.linspace(0,45)), 'k-', alpha=0.5, lw=1.5)

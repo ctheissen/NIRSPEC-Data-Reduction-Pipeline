@@ -3,6 +3,7 @@ import numpy as np
 import scipy.stats
 import scipy.optimize
 #import scipy.ndimage
+import coloredlogs, verboselogs
 
 import config
 import image_lib
@@ -18,13 +19,16 @@ import CAT_Functions as cat
 import matplotlib.pyplot as plt 
 import nirspec_constants
 
+verboselogs.install()
 logger = logging.getLogger('obj')
+#logger = verboselogs.VerboseLogger('obj')
 
 def reduce_order(order, eta=None, arc=None):
         
     #print('ETA BEGINNING', eta)
     #print('REDUCE ORDER BEGINNING', order.flatOrder.orderNum)
     #if order.flatOrder.orderNum != 33: return 0
+    #if order.flatOrder.orderNum != 68: return 0
     #if order.flatOrder.orderNum != 77: return 0
     #sys.exit()
 
@@ -50,26 +54,26 @@ def reduce_order(order, eta=None, arc=None):
     else:
         for frame in order.frames:
             if frame == 'AB': continue # Don't need to do this one
-            logger.info('bad pixel cleaning object frame %s'%frame)
+            logger.info('bad pixel cleaning object frame %s, order %s'%(frame, order.flatOrder.orderNum))
             order.ffObjImg[frame] = fixpix.fixpix_rs(order.ffObjImg[frame])
-            logger.debug('bad pixel cleaning object frame %s complete'%frame)
-        
+            logger.debug('bad pixel cleaning object frame %s, order %s complete'%(frame, order.flatOrder.orderNum))
+    
         if eta is not None:
-            logger.info('bad pixel cleaning etalon frame')
+            logger.info('bad pixel cleaning etalon frame %s, order %s'%(frame, order.flatOrder.orderNum))
             order.ffEtaImg = fixpix.fixpix_rs(order.ffEtaImg)
-            logger.debug('bad pixel cleaning etalon frame complete')
+            logger.debug('bad pixel cleaning etalon frame %s, order %s complete'%(frame, order.flatOrder.orderNum))
 
         if arc is not None:
-            logger.info('bad pixel cleaning arc lamp frame')
+            logger.info('bad pixel cleaning arc lamp frame %s, order %s'%(frame, order.flatOrder.orderNum))
             order.ffArcImg = fixpix.fixpix_rs(order.ffArcImg)
-            logger.debug('bad pixel cleaning arc lamp frame complete')
+            logger.debug('bad pixel cleaning arc lamp frame %s, order %s complete'%(frame, order.flatOrder.orderNum))
     
     ### XXX TESTING AREA
 
-    """
-    plt.figure(3)
-    norm = ImageNormalize(order.ffEtaImg, interval=ZScaleInterval())
-    plt.imshow(order.ffEtaImg, origin='lower', norm=norm, aspect='auto')
+    '''
+    #plt.figure(3)
+    #norm = ImageNormalize(order.ffEtaImg, interval=ZScaleInterval())
+    #plt.imshow(order.ffEtaImg, origin='lower', norm=norm, aspect='auto')
     #np.save('unrect_%s.npy'%order.flatOrder.orderNum, order.ffEtaImg) 
     #plt.savefig('%s_unrect.png'%order.flatOrder.orderNum, dpi=600, bbox_inches='tight')
     plt.figure(33)
@@ -81,16 +85,26 @@ def reduce_order(order, eta=None, arc=None):
     norm = ImageNormalize(order.ffObjImg['B'], interval=ZScaleInterval())
     plt.imshow(order.ffObjImg['B'], origin='lower', aspect='auto', norm=norm)
     plt.show(block=True)
-    """
+    '''
 
     # rectify obj and flattened obj in spatial dimension
     __rectify_spatial(order, eta=eta, arc=arc)
  
+    '''
+    print('SHAPE:', order.ffObjImg['A'].shape, order.ffEtaImg.shape)
+    plt.figure(3)
+    norm = ImageNormalize(order.ffEtaImg, interval=ZScaleInterval())
+    plt.imshow(order.ffEtaImg, origin='lower', norm=norm, aspect='auto')
+    #np.save('unrect_%s.npy'%order.flatOrder.orderNum, order.ffEtaImg) 
+    #plt.savefig('%s_unrect.png'%order.flatOrder.orderNum, dpi=600, bbox_inches='tight')
+    '''
+
     # trim rectified order
     __trim(order, eta=eta, arc=arc)
 
-    """
+    '''
     plt.figure(4)
+    print('SHAPE:', order.ffObjImg['A'].shape, order.ffEtaImg.shape)
     norm = ImageNormalize(order.ffEtaImg, interval=ZScaleInterval())
     plt.imshow(order.ffEtaImg, origin='lower', norm=norm, aspect='auto')
     #np.save('unrect_%s.npy'%order.flatOrder.orderNum, order.ffEtaImg) 
@@ -104,7 +118,8 @@ def reduce_order(order, eta=None, arc=None):
     norm = ImageNormalize(order.ffObjImg['B'], interval=ZScaleInterval())
     plt.imshow(order.ffObjImg['B'], origin='lower', aspect='auto', norm=norm)
     plt.show(block=True)
-    """
+    sys.exit()
+    '''
 
     # save spatially rectified images before spectral rectify for diagnostics 
     # if AB pair then subtract B from A
@@ -257,7 +272,7 @@ def reduce_order(order, eta=None, arc=None):
         else:
             oh_wavelengths, oh_intensities = wavelength_utils.get_oh_lines()
     except IOError as e:
-        logger.critical('cannot read OH/Etalon/Arc line file: ' + str(e))
+        logger.critical('cannot read OH/etalon/arc line file: ' + str(e))
         raise
         
 
@@ -290,7 +305,7 @@ def reduce_order(order, eta=None, arc=None):
         
     if line_pairs is not None:
         
-        logger.info(str(len(line_pairs)) + ' matched sky/etalon/arc lines found in order')
+        logger.success(str(len(line_pairs)) + ' matched sky/etalon/arc lines found in order')
 
         # add line pairs to Order object as Line objects
         if nirspec_constants.upgrade:
@@ -355,6 +370,12 @@ def __flatten(order, eta=None, arc=None):
         
         order.objImg[frame]   = np.array(order.objCutout[frame]) 
         order.ffObjImg[frame] = np.array(order.objCutout[frame] / order.flatOrder.normFlatImg)
+
+        #Also cut out the flat fielded object
+        order.ffObjCutout[frame] = np.array(image_lib.cut_out(order.ffObjImg[frame], 
+                    order.flatOrder.highestPoint, order.flatOrder.lowestPoint, order.flatOrder.cutoutPadding))
+        # Add then mask it
+        order.ffObjCutout[frame] = np.ma.masked_array(order.objCutout[frame], mask=order.flatOrder.offOrderMask)
         
         if frame != 'AB':
             if np.amin(order.ffObjImg[frame]) < 0:
@@ -390,22 +411,28 @@ def __rectify_spatial(order, eta=None, arc=None):
     for frame in order.frames:
         if frame == 'AB': continue # Skip the AB frame, we will subtract them after rectification
 
-        logger.info('attempting spatial rectification using object trace')
+        logger.info('attempting spatial rectification of frame {} using object trace'.format(frame))
+
         try:
             if frame in ['A', 'B']:
                 #print('FRAME', frame)
                 if config.params['onoff'] == True and frame == 'B': 
                     order.objImg[frame]   = image_lib.rectify_spatial(order.objImg[frame], polyVals1)
                     order.ffObjImg[frame] = image_lib.rectify_spatial(order.ffObjImg[frame], polyVals2)
-                    logger.info('frame %s rectified using object trace'%frame)
+                    logger.info('frame {}, order {} rectified using object trace'.format(
+                        frame, order.flatOrder.orderNum))
 
                 else:
-                    polyVals1             = cat.CreateSpatialMap(order.objImg[frame])  
+                    #polyVals1             = cat.CreateSpatialMap(order.objImg[frame])  
+                    polyVals1             = cat.CreateSpatialMap(order.objCutout[frame])  
                     order.objImg[frame]   = image_lib.rectify_spatial(order.objImg[frame], polyVals1)
-                    logger.info('frame %s rectified using object trace'%frame)
-                    polyVals2             = cat.CreateSpatialMap(order.ffObjImg[frame])  
+                    logger.info('frame {}, order {} rectified using object trace'.format(
+                        frame, order.flatOrder.orderNum))
+                    #polyVals2             = cat.CreateSpatialMap(order.ffObjImg[frame])  
+                    polyVals2             = cat.CreateSpatialMap(order.ffObjCutout[frame])  
                     order.ffObjImg[frame] = image_lib.rectify_spatial(order.ffObjImg[frame], polyVals2)
-                    logger.info('flat fielded frame %s rectified using object trace'%frame)
+                    logger.info('flat fielded frame {}, order {} rectified using object trace'.format(
+                        frame, order.flatOrder.orderNum))
 
                 if eta is not None:
                     if frame == 'B':
@@ -415,12 +442,14 @@ def __rectify_spatial(order, eta=None, arc=None):
                         else:
                             order.etaImgB     = image_lib.rectify_spatial(order.etaImgB, polyVals1)
                             order.ffEtaImgB   = image_lib.rectify_spatial(order.ffEtaImgB, polyVals2)
-                            logger.info('etalon frame %s rectified using object trace'%frame)
+                            logger.info('etalon frame {}, order {} rectified using object trace'.format(
+                                frame, order.flatOrder.orderNum))
 
                     else:
                         order.etaImg      = image_lib.rectify_spatial(order.etaImg, polyVals1)
                         order.ffEtaImg    = image_lib.rectify_spatial(order.ffEtaImg, polyVals2)
-                        logger.info('etalon frame %s rectified using object trace'%frame)
+                        logger.info('etalon frame {}, order {} rectified using object trace'.format(
+                            frame, order.flatOrder.orderNum))
 
                 if arc is not None:
                     if frame == 'B':
@@ -430,12 +459,14 @@ def __rectify_spatial(order, eta=None, arc=None):
                         else:
                             order.arcImgB     = image_lib.rectify_spatial(order.arcImgB, polyVals1)
                             order.ffArcImgB   = image_lib.rectify_spatial(order.ffArcImgB, polyVals2)
-                            logger.info('arc lamp frame %s rectified using object trace'%frame)
+                            logger.info('arc lamp frame {}, order {} rectified using object trace'.format(
+                                frame, order.flatOrder.orderNum))
 
                     else:
                         order.arcImg      = image_lib.rectify_spatial(order.arcImg, polyVals1)
                         order.ffArcImg    = image_lib.rectify_spatial(order.ffArcImg, polyVals2)
-                        logger.info('arc lamp frame %s rectified using object trace'%frame)
+                        logger.info('arc lamp frame {}, order {} rectified using object trace'.format(
+                            frame, order.flatOrder.orderNum))
             else:
                 order.objImg[frame]   = image_lib.rectify_spatial(order.objImg[frame], polyVals1)
                 order.ffObjImg[frame] = image_lib.rectify_spatial(order.ffObjImg[frame], polyVals2)
@@ -473,7 +504,7 @@ def __rectify_spatial(order, eta=None, arc=None):
 
 
     order.spatialRectified = True
-    logger.info('order has been rectified in the spatial dimension')
+    logger.success('order has been rectified in the spatial dimension')
         
     return   
  
