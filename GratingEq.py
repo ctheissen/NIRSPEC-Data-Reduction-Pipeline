@@ -29,7 +29,7 @@ class GratingEq:
             #coeffs['NIRSPEC-7'] = { 'c1': 0.376655776, 'c2': -4.22366351e6, 'y0': 2.45448586e6,
             #                        'r1': 0.23482994, 'r2': -33591.707, 'z0': 14891.3158};    
                                           
-            coeffs['NIRSPEC-7'] = { 'c1': 0.376924640, 'c2': -1.14549849e4, 'y0': -5.13532390e2,
+            coeffs['NIRSPEC-7'] = { 'c1': 0.37673628855616464, 'c2': -16820.86460210653, 'y0': 2620.4274343405577,
                                     'r1': 0.23482994, 'r2': -33591.707, 'z0': 14891.3158};  
 
             coeffs['NIRSPEC-6'] = { 'c1': 0.24986411, 'c2': -35961.453, 'y0': 15944.8337,
@@ -137,7 +137,8 @@ class GratingEq:
                 #k3 = -3.91408142e6 # Found these coeffs empirically using the new format simulator
                 #k4 = -1.09796060e5
 
-                k3, k4 = 6.51668027e4, 1.82380583e3 # New test coeffs
+                #k3, k4 = 6.51668027e4, 1.82380583e3 # New test coeffs
+                k3, k4 = 25943.42645610225, 724.5138607638191 # New test coeffs for N7
 
                 if 'NIRSPEC-1' in filtername:
                     #k3 = 5.23052614e6
