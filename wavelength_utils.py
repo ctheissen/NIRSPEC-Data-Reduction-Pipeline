@@ -234,6 +234,13 @@ def get_oh_lines():
             if oh_filename is None:
                 oh_filename = config.params['oh_filename']
              
+        # Check if the OH file exits (good path)
+        if not os.path.isfile(oh_filename):
+            # Try to find the path relative to this file
+            ThisFileDir = os.path.dirname(__file__)
+            oh_filename = os.path.join(ThisFileDir, './ir_ohlines.dat')
+
+
         logger.info('reading OH line data from ' + oh_filename)
         
         try:
