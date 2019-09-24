@@ -423,6 +423,8 @@ def __rectify_spatial(order, eta=None, arc=None):
                         frame, order.flatOrder.orderNum))
                 
                 elif config.params['spatial_rect_flat'] == True:
+
+                    logger.info('order will be rectified in the spatial dimension using the median order trace')
                     order.objImg[frame] = image_lib.rectify_spatial(
                         order.objImg[frame], order.flatOrder.smoothedSpatialTrace)
                     order.ffObjImg[frame] = image_lib.rectify_spatial(
