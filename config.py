@@ -17,6 +17,7 @@ params['oh_envar_override']     = False     # if True then use params['oh_filena
                                             
 params['spatial_jump_override'] = False
 params['spatial_rect_flat']     = False     # Do not trace the object spectra for spatial rectification (low S/N usage)
+params['boost_signal']          = False     # Boost the signal for the spatial rectification trace. Useful for faint sources
 
 params['int_c']                 = False
 params['dgn']                   = False     # diagnostic data product generation enabled if True

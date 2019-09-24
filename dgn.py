@@ -417,19 +417,25 @@ def spatrect_plot(outpath, base_name, order_num, obj, flat):
     pl.set_cmap('Blues_r')
 
     obj_plot = pl.subplot(2, 1, 1)
-    try:
-        obj_plot.imshow(exposure.equalize_hist(obj), aspect='auto', origin='lower')
-    except:
-        obj_plot.imshow(obj, aspect='auto', origin='lower')
+
+    norm = ImageNormalize(obj, interval=ZScaleInterval())
+    obj_plot.imshow(obj, origin='lower', aspect='auto', norm=norm)
+    #try:
+    #    obj_plot.imshow(exposure.equalize_hist(obj), aspect='auto', origin='lower')
+    #except:
+    #    obj_plot.imshow(obj, aspect='auto', origin='lower')
     obj_plot.set_title('object')
 #     obj_plot.set_ylim([1023, 0])
     obj_plot.set_xlim([0, endPix-1])
     
     flat_plot = pl.subplot(2, 1, 2)
-    try:
-        flat_plot.imshow(exposure.equalize_hist(flat), aspect='auto', origin='lower')
-    except:
-        flat_plot.imshow(flat, aspect='auto', origin='lower')
+
+    norm = ImageNormalize(flat, interval=ZScaleInterval())
+    flat_plot.imshow(flat, origin='lower', aspect='auto', norm=norm)
+    #try:
+    #    flat_plot.imshow(exposure.equalize_hist(flat), aspect='auto', origin='lower')
+    #except:
+    #    flat_plot.imshow(flat, aspect='auto', origin='lower')
     flat_plot.set_title('flat')
 #     flat_plot.set_ylim([1023, 0])
     flat_plot.set_xlim([0, endPix-1])
@@ -461,9 +467,9 @@ def specrect_plot(outpath, base_name, order_num, before, after):
     
     try:
         before[np.where(before < 0)] = np.median(before)
-        #norm = ImageNormalize(before, interval=ZScaleInterval())
-        #before_plot.imshow(before, aspect='auto', norm=norm)
-        before_plot.imshow(exposure.equalize_hist(before), aspect='auto', origin='lower')
+        norm = ImageNormalize(before, interval=ZScaleInterval())
+        before_plot.imshow(before, origin='lower', aspect='auto', norm=norm)
+        #before_plot.imshow(exposure.equalize_hist(before), aspect='auto', origin='lower')
     except:
         before_plot.imshow(before, aspect='auto', origin='lower')
     before_plot.set_title('before')
@@ -476,9 +482,9 @@ def specrect_plot(outpath, base_name, order_num, before, after):
     
     try:
         after[np.where(after < 0)] = np.median(after)
-        #norm = ImageNormalize(after, interval=ZScaleInterval())
-        #after_plot.imshow(after, aspect='auto', norm=norm)
-        after_plot.imshow(exposure.equalize_hist(after), aspect='auto', origin='lower')
+        norm = ImageNormalize(after, interval=ZScaleInterval())
+        after_plot.imshow(after, origin='lower', aspect='auto', norm=norm)
+        #after_plot.imshow(exposure.equalize_hist(after), aspect='auto', origin='lower')
     except:
         after_plot.imshow(after, aspect='auto', origin='lower')
     after_plot.set_title('after')

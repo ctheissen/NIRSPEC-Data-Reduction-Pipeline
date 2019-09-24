@@ -22,6 +22,9 @@ def CreateSpatialMap(image, numrows=5, clip=15, cutoff=10, plot=False, plotvid=F
 	if nirspec_constants.upgrade: 
 		numrows, cutoff = 11, 40
 
+	if nirspec_constants.boost_signal:
+		numrows *= 3
+
 	#print(image.shape)
 	Centroids = []
 	Pixels    = []

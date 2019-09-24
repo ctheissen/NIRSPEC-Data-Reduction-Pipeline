@@ -84,6 +84,7 @@ def main():
     config.params['gunzip']                     = args.gunzip
     config.params['spatial_jump_override']      = args.spatial_jump_override
     config.params['spatial_rect_flat']          = args.spatial_rect_flat
+    config.params['boost_signal']               = args.boost_signal
     if args.out_dir is not None:
         config.params['out_dir']                = args.out_dir
     config.params['jpg']                        = args.jpg
@@ -297,6 +298,10 @@ def parse_cmnd_line_args():
             action='store_true')
     parser.add_argument('-spatial_rect_flat',
             help='using median order trace from flat frame to perform spatial rectification', 
+            action='store_true')
+    parser.add_argument('-boost_signal',
+            help='use more columns when tracing the object for spatial rectification. \
+                  Useful for faint sources if the spatial rectification fails. Also see -spatial_rect_flat', 
             action='store_true')
     parser.add_argument('-out_dir', 
             help='output directory path used in command line mode, default is current working \
