@@ -421,6 +421,15 @@ def __rectify_spatial(order, eta=None, arc=None):
                     order.ffObjImg[frame] = image_lib.rectify_spatial(order.ffObjImg[frame], polyVals2)
                     logger.info('frame {}, order {} rectified using object trace'.format(
                         frame, order.flatOrder.orderNum))
+                
+                elif config.params['spatial_rect_flat'] == True:
+                    order.objImg[frame] = image_lib.rectify_spatial(
+                        order.objImg[frame], order.flatOrder.smoothedSpatialTrace)
+                    order.ffObjImg[frame] = image_lib.rectify_spatial(
+                        order.ffObjImg[frame], order.flatOrder.smoothedSpatialTrace)
+
+                    logger.info('frame {}, order {} rectified in the spatial dimension using flat frame'.format(
+                        frame, order.flatOrder.orderNum))
 
                 else:
                     #polyVals1             = cat.CreateSpatialMap(order.objImg[frame])  

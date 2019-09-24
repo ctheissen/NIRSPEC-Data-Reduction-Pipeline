@@ -16,6 +16,7 @@ params['oh_envar_override']     = False     # if True then use params['oh_filena
                                             # even if envar is set
                                             
 params['spatial_jump_override'] = False
+params['spatial_rect_flat']     = False     # Do not trace the object spectra for spatial rectification (low S/N usage)
 
 params['int_c']                 = False
 params['dgn']                   = False     # diagnostic data product generation enabled if True
