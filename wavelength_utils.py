@@ -285,6 +285,12 @@ def get_etalon_lines():
             etalon_filename = os.environ.get(config.params['etalon_envar_name'])
             if etalon_filename is None:
                 etalon_filename = config.params['etalon_filename']
+
+        # Check if the Etalon file exits (good path)
+        if not os.path.isfile(etalon_filename):
+            # Try to find the path relative to this file
+            ThisFileDir     = os.path.dirname(__file__)
+            etalon_filename = os.path.join(ThisFileDir, './ir_etalonlines.dat')
              
         logger.info('reading etalon line data from ' + etalon_filename)
         
@@ -329,7 +335,13 @@ def get_arclamp_lines():
             arclamp_filename = os.environ.get(config.params['arclamp_envar_name'])
             if arclamp_filename is None:
                 arclamp_filename = config.params['arclamp_filename']
-             
+        
+        # Check if the Arc lamp file exits (good path)
+        if not os.path.isfile(arclamp_filename):
+            # Try to find the path relative to this file
+            ThisFileDir      = os.path.dirname(__file__)
+            arclamp_filename = os.path.join(ThisFileDir, './ir_arclines.dat')
+
         logger.info('reading arc lamp line data from ' + arclamp_filename)
         
         try:
