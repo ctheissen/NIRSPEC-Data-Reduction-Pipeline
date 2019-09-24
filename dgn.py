@@ -12,10 +12,10 @@ import config
 import nirspec_constants as const
 
 import scipy.misc
-try: 
-    from scipy.misc.pilutil import imresize # deprecated in newer versions of scipy
-except:
-    from skimage.transform import resize as imresize # this is where it exists now
+#try: 
+#    from scipy.misc.pilutil import imresize # deprecated in newer versions of scipy
+#except:
+#    from skimage.transform import resize as imresize # this is where it exists now
 from astropy.visualization import ZScaleInterval, ImageNormalize
 
 # import Order
@@ -457,7 +457,7 @@ def specrect_plot(outpath, base_name, order_num, before, after):
 
     before_plot = pl.subplot(2, 1, 1)
     
-    before = imresize(before, (500, endPix), interp='bilinear')
+    #before = imresize(before, (500, endPix), interp='bilinear')
     
     try:
         before[np.where(before < 0)] = np.median(before)
@@ -472,7 +472,7 @@ def specrect_plot(outpath, base_name, order_num, before, after):
     
     after_plot = pl.subplot(2, 1, 2)
     
-    after = imresize(after, (500, endPix), interp='bilinear')
+    #after = imresize(after, (500, endPix), interp='bilinear')
     
     try:
         after[np.where(after < 0)] = np.median(after)
