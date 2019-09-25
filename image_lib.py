@@ -145,7 +145,7 @@ def cosmic_clean(data):
     max_iter = 3
     sig_clip = 5.0
     sig_frac = 0.3
-    obj_lim = 5.0
+    obj_lim  = 5.0
     
     c = cosmics.cosmicsImage(data, sigclip=sig_clip, sigfrac=sig_frac, objlim=obj_lim, 
             verbose=False)
