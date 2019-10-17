@@ -41,7 +41,7 @@ class GratingEq:
             coeffs['NIRSPEC-4'] = { 'c1': 0.37318182, 'c2': -36031.358, 'y0': 16009.5052,
                                     'r1': 0.35333187, 'r2': -33646.524, 'z0': 14908.2313};    
         
-            coeffs['NIRSPEC-3'] = { 'c1': 0.37495832, 'c2': -36067.086, 'y0': 15987.1927,
+            coeffs['NIRSPEC-3'] = { 'c1': 0.5483846186683026, 'c2': 2619926.3027357045, 'y0': -1474305.8943388879,
                                     'r1': 0.35514352, 'r2': -36175.709, 'z0': 16283.995};    
                                 
             coeffs['NIRSPEC-2'] = { 'c1': 0.49449345, 'c2': -35965.39,  'y0': 15987.1423,
@@ -85,14 +85,12 @@ class GratingEq:
         if const.upgrade: 
             pixel = np.arange(const.N_COLS_upgrade, dtype=float)
 
-            #k1 = 8.55030015e5 # Found these coeffs empirically using the new format simulator
-            #k2 = 1.61866180e1
+            #k1, k2 = 8.55030015e5, 1.61866180e1 # Found these coeffs empirically using the new format simulator
             k1, k2 = 8.54942246e5, 1.65988312e1 # New test coeffs
         else:
             pixel = np.arange(const.N_COLS, dtype=float)
     
-            k1 = 8.528e5
-            k2 = 2.413e1
+            k1, k2 = 8.528e5, 2.413e1
     
         # solve for wavelength scale
         if const.upgrade: # 
@@ -141,15 +139,17 @@ class GratingEq:
                 k3, k4 = 25943.42645610225, 724.5138607638191 # New test coeffs for N7
 
                 if 'NIRSPEC-1' in filtername:
-                    #k3 = 5.23052614e6
-                    #k4 = 1.49654716e5
+                    #k3, k4 = 5.23052614e6, 1.49654716e5 # old coeffs
                     k3, k4 = -2.47020399e6, -7.06809106e4 # New test coeffs
+
+                if 'NIRSPEC-3' in filtername:
+                    k3, k4 = 6502903.990434638, 190754.13930795414
+
                 if 'K-' in filtername:
-                    k3 = -3.75106282e6
-                    k4 = -1.05224419e5
-            else:
-                k3 = 9.9488e1
-                k4 = 1.0517e0
+                    k3, k4 = -3.75106282e6, -1.05224419e5
+
+            else: # pre-upgrade values
+                k3, k4 = 9.9488e1, 1.0517e0
             
             left_top_row = left_mid_row + ((k3 - (k4 * disppos)) / 2.0)
             left_bot_row = left_mid_row - ((k3 - (k4 * disppos)) / 2.0)
