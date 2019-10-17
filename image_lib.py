@@ -6,6 +6,7 @@ import cosmics
 import matplotlib.pyplot as plt
 import os
 import nirspec_constants
+import optimal_extraction
 
 
 def rectify_spatial(data, curve):
@@ -226,8 +227,20 @@ def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, e
     #plt.show()
     #sys.exit()
     '''
+
+    print(obj_range, sky_range_top, sky_range_bot)
+    #sys.exit()
+    print(min(obj_range),max(obj_range)+1)
+    print(min(sky_range_bot),max(sky_range_bot)+1,min(sky_range_top),max(sky_range_top)+1)
+    noise -= np.square(10. / 2.85)
+
+    #trace = ()
+    optimal_extraction.superExtract(obj, noise, 2.85, 10., verbose=1)
+    sys.exit()
+    #(obj_sum, obj_noise_sum, profile, background, goodpixelmask) = optimal_extraction.optimalExtract(obj, noise, 2.85, 10., verbose=1, pord=3, bord=3, extract_radius=(min(obj_range),max(obj_range)+1), bkg_radii=(min(sky_range_bot),max(sky_range_bot)+1,min(sky_range_top),max(sky_range_top)+1))
     
-    obj_sum     = np.sum(obj[i, :] for i in obj_range)
+    
+    #obj_sum     = np.sum(obj[i, :] for i in obj_range)
     flat_sum    = np.sum(flat[i, :] for i in obj_range)
     
     flat_sp     = flat_sum / len(obj_range)

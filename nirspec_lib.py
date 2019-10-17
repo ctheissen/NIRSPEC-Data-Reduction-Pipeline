@@ -7,6 +7,7 @@ import nirspec_constants
 
 import tracer
 import matplotlib.pyplot as plt
+import optimal_extraction
 
 logger = logging.getLogger('obj')
       
@@ -25,20 +26,22 @@ def calc_noise_img(obj, flat, integration_time):
         DC = 0.67 # e-/second/pixel
     
     # calculate photon noise
-    #noise = obj / G # What is this?
-    noise = obj # This is ALREADY in ADU!
-    #noise = obj * G # This is in electrons
+    noise = obj / G  # This is in ADU
+    #noise = obj * G  # This is in electrons
     
     # add read noise
     noise += np.square(RN / G) # This is in ADU
     #noise += np.square(RN) # This is in electrons
     
     # add dark current noise
-    noise += (DC / G) * integration_time # This is in ADU
+    noise += DC * integration_time / np.square(G) # This is in ADU
     #noise += (DC / G) * integration_time # This is in electrons
     
     # divide by normalized flat squared
     noise /= np.square(flat)
+    
+    #optimal_extraction.optimalExtract(obj[30:71,50:-250], noise[30:71,50:-250], G, RN, finite=False, verbose=1, pord=0, bord=0, extract_radius=(15,25), bkg_radii=(0,10,30,40))
+    #sys.exit()
     
     return noise
 

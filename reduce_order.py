@@ -28,6 +28,7 @@ def reduce_order(order, eta=None, arc=None):
     #print('ETA BEGINNING', eta)
     #print('REDUCE ORDER BEGINNING', order.flatOrder.orderNum)
     #if order.flatOrder.orderNum != 33: return 0
+    if order.flatOrder.orderNum != 37: return 0
     #if order.flatOrder.orderNum != 68: return 0
     #if order.flatOrder.orderNum != 77: return 0
     #sys.exit()
@@ -273,6 +274,7 @@ def reduce_order(order, eta=None, arc=None):
 
     # compute noise image
     for frame in order.frames:
+        
         order.noiseImg[frame] = nirspec_lib.calc_noise_img(
                 order.objImg[frame], order.flatOrder.rectFlatImg, order.integrationTime)
 
