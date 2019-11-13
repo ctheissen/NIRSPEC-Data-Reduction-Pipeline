@@ -234,7 +234,7 @@ def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, e
     print(min(sky_range_bot),max(sky_range_bot)+1,min(sky_range_top),max(sky_range_top)+1)
     noise -= np.square(10. / 2.85)
 
-    #trace = ()
+    #trace = np.median(obj_range)
     optimal_extraction.superExtract(obj, noise, 2.85, 10., verbose=1)
     sys.exit()
     #(obj_sum, obj_noise_sum, profile, background, goodpixelmask) = optimal_extraction.optimalExtract(obj, noise, 2.85, 10., verbose=1, pord=3, bord=3, extract_radius=(min(obj_range),max(obj_range)+1), bkg_radii=(min(sky_range_bot),max(sky_range_bot)+1,min(sky_range_top),max(sky_range_top)+1))

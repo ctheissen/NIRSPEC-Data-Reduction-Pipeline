@@ -966,12 +966,13 @@ def superExtract(frame, variance, gain, readnoise, *args, **kw):
 
     if trace is None:
         trace = 5
+    '''
     if not hasattr(trace, '__iter__'):
         if verbose: logger.debug("Tracing not fully tested; dispaxis may need adjustment.")
         #pdb.set_trace()
         tracecoef = traceorders(frame, pord=trace, nord=1, verbose=verbose-1, plotalot=verbose-1, g=gain, rn=readnoise, badpixelmask=True-goodpixelmask, dispaxis=dispaxis, fitwidth=min(fitwidth, 80))
         trace     = np.polyval(tracecoef.ravel(), np.arange(nlam))
-
+    '''
     
     #xxx = np.arange(-fitwidth/2, fitwidth/2)
     #backgroundAperture = (np.abs(xxx) > bkg_radii[0]) * (np.abs(xxx) < bkg_radii[1])
