@@ -113,28 +113,6 @@ def reduce_frame(raw, out_dir, flatCacher=None, eta=None, arc=None, dark=None):
 
         reduced.cosmicCleaned = True 
 
-
-    ### XXX TESTING AREA 
-    """ moved this to reduce order
-    if config.params['no_clean']:
-        logger.info("bad pixel rejection on object frame inhibited by command line flag")
-
-    else:
-        logger.info('bad pixel cleaning object frame A')
-        reduced.objImg['A'] = fixpix.fixpix_rs(reduced.objImg['A'])
-        logger.debug('bad pixel cleaning object frame A complete')
-        if reduced.isPair:
-            logger.info('bad pixel cleaning object frame B')
-            reduced.objImg['B'] = fixpix.fixpix_rs(reduced.objImg['B'])
-            logger.debug('bad pixel cleaning object frame B complete')
-        if eta is not None:
-            logger.info('bad pixel cleaning etalon frame')
-            reduced.etaImg = fixpix.fixpix_rs(reduced.etaImg)
-            logger.debug('bad pixel cleaning etalon frame complete')
-
-        reduced.pixelCleaned = True 
-    """
-    ### XXX TESTING AREA
            
     # if darks are available, combine them if there are more than one
     # and subtract from object frame(s) and flat
