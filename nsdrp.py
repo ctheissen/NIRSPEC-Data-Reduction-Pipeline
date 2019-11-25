@@ -257,7 +257,7 @@ def parse_cmnd_line_args():
             action='store_true')
     parser.add_argument('-no_products', help='inhibits data product generation', 
             action='store_true')
-    parser.add_argument('-fixpix', help='inhibits bad pixel cleaning (ported from REDSPEC fixpix)', 
+    parser.add_argument('-fixpix', help='requests bad pixel cleaning (ported from REDSPEC fixpix)', 
             action='store_true')
     parser.add_argument('-onoff', help='does On-Off for the AB frame instead of A-B', 
             action='store_true')
