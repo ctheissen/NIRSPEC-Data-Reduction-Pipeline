@@ -22,7 +22,7 @@ import nsdrp_koa
 #from DrpException import DrpException
 #import FlatCacher
 
-VERSION = '0.9.17.c8'
+VERSION = '0.9.17.c10'
 
 warnings.filterwarnings('ignore', category=UserWarning, append=True)
 
@@ -55,7 +55,7 @@ def main():
     config.params['npy']                        = args.npy
     config.params['no_cosmic']                  = args.no_cosmic
     config.params['no_products']                = args.no_products
-    config.params['no_clean']                   = args.no_clean
+    config.params['fixpix']                     = args.fixpix
     config.params['onoff']                      = args.onoff
     if args.obj_window is not None:
         config.params['obj_window']             = int(args.obj_window)
@@ -257,7 +257,7 @@ def parse_cmnd_line_args():
             action='store_true')
     parser.add_argument('-no_products', help='inhibits data product generation', 
             action='store_true')
-    parser.add_argument('-no_clean', help='inhibits bad pixel cleaning', 
+    parser.add_argument('-fixpix', help='requests bad pixel cleaning (ported from REDSPEC fixpix)', 
             action='store_true')
     parser.add_argument('-onoff', help='does On-Off for the AB frame instead of A-B', 
             action='store_true')
