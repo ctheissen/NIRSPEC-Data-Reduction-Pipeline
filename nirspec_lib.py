@@ -25,7 +25,8 @@ def calc_noise_img(obj, flat, integration_time):
         DC = 0.67 # e-/second/pixel
     
     # calculate photon noise
-    noise = obj / G  # This is in ADU
+    noise = obj      # This is already in ADU!
+    #noise = obj / G  # This is in ADU (only works if obj is in electrons)
     #noise = obj * G  # This is in electrons
     
     # add read noise
