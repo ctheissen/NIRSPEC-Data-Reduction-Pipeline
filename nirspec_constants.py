@@ -2,6 +2,7 @@
 N_COLS          = 1024
 N_ROWS          = 1024
 upgrade         = False
+boost_signal    = False
 N_COLS_upgrade  = 2048
 N_ROWS_upgrade  = 2048
 
