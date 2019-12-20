@@ -28,7 +28,7 @@ def reduce_order(order, eta=None, arc=None):
     #print('ETA BEGINNING', eta)
     #print('REDUCE ORDER BEGINNING', order.flatOrder.orderNum)
     #if order.flatOrder.orderNum != 33: return 0
-    if order.flatOrder.orderNum != 37: return 0
+    #if order.flatOrder.orderNum != 37: return 0
     #if order.flatOrder.orderNum != 68: return 0
     #if order.flatOrder.orderNum != 77: return 0
     #sys.exit()
