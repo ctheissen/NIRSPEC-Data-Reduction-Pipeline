@@ -376,7 +376,7 @@ def smooth_spectral_trace(data, l, eta=None, arc=None, version2=True, plot=False
                 p0 = np.polyfit(newPix2, newData, deg=1)  # end always drops off
                 z0 = np.poly1d(p0)
 
-                filtered_data = sigma_clip(newData - z0(newPix2), sigma=2., iters=None)
+                filtered_data = sigma_clip(newData - z0(newPix2), sigma=2., maxiters=None)
 
                 newCent = newData[~filtered_data.mask]
                 newPix  = newPix2[~filtered_data.mask]
