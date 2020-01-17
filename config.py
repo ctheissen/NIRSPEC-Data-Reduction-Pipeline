@@ -14,6 +14,16 @@ params['oh_filename']           = './ir_ohlines.dat'
 params['oh_envar_name']         = 'NSDRP_OH_FILENAME'
 params['oh_envar_override']     = False     # if True then use params['oh_filename'] 
                                             # even if envar is set
+
+params['arclamp_filename']      = './ir_arclines.dat'
+params['arclamp_envar_name']    = 'NSDRP_ARC_FILENAME'
+params['arclamp_envar_override']= False     # if True then use params['arclamp_filename'] 
+                                            # even if envar is set
+
+params['etalon_filename']       = './ir_etalonlines.dat'
+params['etalon_envar_name']     = 'NSDRP_ETALON_FILENAME'
+params['etalon_envar_override'] = False     # if True then use params['arclamp_filename'] 
+                                            # even if envar is set
                                             
 params['spatial_jump_override'] = False
 params['spatial_rect_flat']     = False     # Do not trace the object spectra for spatial rectification (low S/N usage)
