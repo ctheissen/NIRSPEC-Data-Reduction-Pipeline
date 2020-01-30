@@ -29,7 +29,7 @@ class GratingEq:
             #coeffs['NIRSPEC-7'] = { 'c1': 0.376655776, 'c2': -4.22366351e6, 'y0': 2.45448586e6,
             #                        'r1': 0.23482994, 'r2': -33591.707, 'z0': 14891.3158};    
                                           
-            coeffs['NIRSPEC-7'] = { 'c1': 0.37673628855616464, 'c2': -16820.86460210653, 'y0': 2620.4274343405577,
+            coeffs['NIRSPEC-7'] = { 'c1': 0.3762528904295905, 'c2': -55815.66667203201, 'y0': 25409.58619107794,
                                     'r1': 0.23482994, 'r2': -33591.707, 'z0': 14891.3158};  
 
             coeffs['NIRSPEC-6'] = { 'c1': 0.24986411, 'c2': -35961.453, 'y0': 15944.8337,
@@ -108,7 +108,7 @@ class GratingEq:
     
         # solve for location of the beginning of the middle of the order in spatial axis
         left_mid_row = c1 * wavelength_left + c2 * np.sin(np.radians(disppos)) + y0
-        #print('LEFT:', wavelength_left, left_mid_row, const.upgrade)
+        print('LEFT MID ROW:', wavelength_left, left_mid_row, y0, const.upgrade)
     
         if config.params['sowc'] is True:
             self.logger.info('using simple order width calculation')
@@ -136,7 +136,7 @@ class GratingEq:
                 #k4 = -1.09796060e5
 
                 #k3, k4 = 6.51668027e4, 1.82380583e3 # New test coeffs
-                k3, k4 = 25943.42645610225, 724.5138607638191 # New test coeffs for N7
+                k3, k4 = -5180.066856532895, -147.8282537982944 # New test coeffs for N7
 
                 if 'NIRSPEC-1' in filtername:
                     #k3, k4 = 5.23052614e6, 1.49654716e5 # old coeffs

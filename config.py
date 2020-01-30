@@ -87,7 +87,7 @@ max_edge_location_error = {
         'NIRSPEC-4': 20, 
         'NIRSPEC-5': 50, 
         'NIRSPEC-6': 20, 
-        'NIRSPEC-7': 60, 
+        'NIRSPEC-7': 100, 
         'K-AO': 60  
 }
 
