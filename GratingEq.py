@@ -108,7 +108,7 @@ class GratingEq:
     
         # solve for location of the beginning of the middle of the order in spatial axis
         left_mid_row = c1 * wavelength_left + c2 * np.sin(np.radians(disppos)) + y0
-        print('LEFT MID ROW:', wavelength_left, left_mid_row, y0, const.upgrade)
+        #print('LEFT MID ROW:', wavelength_left, left_mid_row, y0, const.upgrade)
     
         if config.params['sowc'] is True:
             self.logger.info('using simple order width calculation')
@@ -228,10 +228,14 @@ class GratingEq:
                 left_bot_row += filter_4_5_6_y_corr
                 
             elif 'NIRSPEC-3' in filtername:
-                self.logger.debug('applying +' + str(filter_3_y_corr) + 
-                            ' pixel N-3 filter y corr for filter ' + filtername )
-                left_top_row += filter_3_y_corr
-                left_bot_row += filter_3_y_corr
+                if const.upgrade:
+                    left_top_row += 0
+                    left_bot_row += 0
+                else:
+                    self.logger.debug('applying +' + str(filter_3_y_corr) + 
+                                ' pixel N-3 filter y corr for filter ' + filtername )
+                    left_top_row += filter_3_y_corr
+                    left_bot_row += filter_3_y_corr
                 
             elif 'NIRSPEC-1' in filtername:
                 self.logger.debug('applying +' + str(filter_1_y_corr) + 
