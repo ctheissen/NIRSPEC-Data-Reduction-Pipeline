@@ -101,8 +101,9 @@ def main():
                                  arc=args.arc_filename, override=args.override_ab, dark=args.dark_filename)
     else:
         init(args.arg2, args.arg1)
-        nsdrp_koa.process_dir(args.arg1, args.arg2, eta=args.eta_filename, 
-                              arc=args.arc_filename, override=args.override_ab, dark=args.dark_filename)
+        #nsdrp_koa.process_dir(args.arg1, args.arg2, eta=args.eta_filename, 
+        #                      arc=args.arc_filename, override=args.override_ab, dark=args.dark_filename)
+        nsdrp_koa.process_dir(args.arg1, args.arg2)
 #     except Exception as e:
 #         print('ERROR: ' + e.message)
 #         if config.params['debug'] is True:
