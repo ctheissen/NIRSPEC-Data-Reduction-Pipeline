@@ -41,6 +41,10 @@ class FlatCacher:
 #         self.logger.debug('looking for flat: ' + 
 #             ', '.join(str(x) for x in ([fn[fn.find("NS"):fn.rfind(".")] for fn in fns])))
 
+        # should take only odd number of flat files
+        if len(fns)%2 == 0:
+            fns     = fns[1:]
+
         baseFns = self.fnsToBaseFns(fns)
         
         fn = self.getCachedFlat(baseFns)
