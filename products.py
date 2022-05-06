@@ -286,6 +286,9 @@ def gen(reduced, out_dir, eta=None, arc=None):
             fitsSpectrum(out_dir, reduced.baseNames[frame], 'flux', order.flatOrder.orderNum, 
                 'counts/s', order.objSpec[frame]/order.integrationTime, order.waveScale, header)
 
+            asciiSpectrum(out_dir, reduced.baseNames[frame], 'flux', order.flatOrder.orderNum, 
+                order.waveScale, order.objSpec[frame], order.noiseSpec[frame])
+
         # wavelength fits
         for frame in reduced.frames:
 
@@ -788,6 +791,58 @@ def spectrumPlot(outpath, base_name, title, order_num, y_units, cont, wave,
     log_fn(fn)
     return
     
+
+
+def asciiSpectrum(outpath, base_name, title, order_num, wave, flux, noise):
+     
+    names   = [ 'col',         'wave',         'flux',         'noise']
+    units   = [ 'pixels',      'Angstroms',    'counts',       'counts']
+    formats = [ 'd',           '.6e',          '.3e',          '.3e']
+    nominal_width = 10
+    widths        = []
+    
+    if config.params['pipes'] is True:
+        p_char = '|'
+    else:
+        p_char = ' '
+        
+    for name in names:
+        widths.append(max(len(name), nominal_width))
+            
+    for i in range(len(names)):
+        widths[i] = max(len(units[i]), widths[i])
+        
+    widths[0] = 6
+    widths[1] = 13
+    
+    buff = []
+    
+    line = []
+    for i, name in enumerate(names):
+        line.append('{:>{w}}'.format(name, w=widths[i]))
+    buff.append('{} {} {}'.format(p_char, (p_char + ' ').join(line), p_char))
+    
+    line = []
+    for i, unit in enumerate(units):
+        line.append('{:>{w}}'.format(unit, w=widths[i]))
+    buff.append('{} {} {}'.format(p_char, (p_char + ' ').join(line), p_char))
+    
+    for col in range(wave.shape[0]):
+        data = [col, wave[col], flux[col], noise[col]]
+        line = []
+        for i, val in enumerate(data):
+            line.append('{:>{w}{f}}'.format(val, w=widths[i], f=formats[i]))
+        buff.append('  {}  '.format('  '.join(line)))
+        
+    #print('\n'.join(buff))
+        
+    fn = constructFileName(outpath, base_name, order_num, 'flux.txt')
+    fptr = open(fn, 'w')
+    fptr.write('\n'.join(buff))
+    fptr.close()
+    log_fn(fn)
+    return
+
 
 
 def fitsSpectrum(outpath, base_name, title, order_num, y_units, cont, wave, header):
