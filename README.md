@@ -2,6 +2,9 @@
 
 This version is modified by Chris Theissen & Dino Hsu. This includes some bugs fixed in Python 3, with the modifications mentioned in the codes. Ideally, this version of NSDRP needs to be processed together with [nirspec_pip](https://github.com/chihchunhsu/nirspec_pip).
 
+IMPORTANT:
+NIRSPEC underwent an upgrade on October 10, 2018, after which the KOA mode of NSDRP did not work. Currently NSDRP only works in A-B mode for post-upgrade data. See below on upgrade usage notes.
+
 PREREQUISITES:
 
 1)    NSDRP was developed with Anaconda python and that distribution is recommended, but can be run with Ureka or other python installations. Anaconda comes installed with the required modules: numpy, os, math, subprocess, fnmatch, logging, pylab, errno, datetime, warnings, astropy, scipy, argparse, and statsmodels. Depending on your python distribution of choice, you may be required to manually download and install one or more of these modules.
@@ -62,4 +65,19 @@ EXECUTING NSDRP:
       Changes have been made to make the latest version compatible with the upgraded NIRSEPC (end of 2018). 
       Wavelength solutions may or may not be accurate, contact Chris Theissen for more info.
       Additional testing for KOA mode is needed. Best results are given we used in AB pair mode.
+      
+      Example usage for upgraded NIRSPEC: 
+      python nsdrp.py /path_to/Aframe /path_to/Bframe
+      
+      Additionally you may pass an arc file by specifying the keywords: 
+      -arc_filename=/path_to/Arcfile -arclamp_filename=/path_to/NIRSPEC-Data-Reduction-Pipeline/ir_arclines.dat
+      
+      Similary, you may pass an etalon file using the keywords:
+      -arc_filename=/path_to/Etalonfile -arclamp_filename=/path_to/NIRSPEC-Data-Reduction-Pipeline/ir_etalonlines.dat
+      
+      Other recommened keywords include:
+      -spatial_jump_override 
+      -verbose 
+      -debug
+      -dgn
 
