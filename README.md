@@ -73,7 +73,7 @@ EXECUTING NSDRP:
       -arc_filename=/path_to/Arcfile -arclamp_filename=/path_to/NIRSPEC-Data-Reduction-Pipeline/ir_arclines.dat
       
       Similary, you may pass an etalon file using the keywords:
-      -arc_filename=/path_to/Etalonfile -arclamp_filename=/path_to/NIRSPEC-Data-Reduction-Pipeline/ir_etalonlines.dat
+      -eta_filename=/path_to/Etalonfile -etalamp_filename=/path_to/NIRSPEC-Data-Reduction-Pipeline/ir_etalonlines.dat
       
       Other recommened keywords include:
       -spatial_jump_override 

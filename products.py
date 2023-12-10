@@ -431,7 +431,7 @@ def traceFits(outpath, base_name, order_num, trace):
     hdu     = fits.PrimaryHDU(trace)
     hdulist = fits.HDUList(hdu)
     fn      = constructFileName(outpath, base_name, order_num, 'trace.fits')     
-    hdulist.writeto(fn, clobber=True)
+    hdulist.writeto(fn, overwrite=True)
     log_fn(fn)
     return
 
@@ -529,7 +529,7 @@ def profileFitsTable(outpath, base_name, order_num, profile):
             fits.Column(name='mean_flux (cnts)', format='1D', array=profile)]))
     thdulist = fits.HDUList([prihdu, tbhdu]) 
     fn = constructFileName(outpath, base_name, order_num, 'profile_tbl.fits')
-    thdulist.writeto(fn, clobber=True)  
+    thdulist.writeto(fn, overwrite=True)  
     log_fn(fn)
     return  
 
@@ -548,7 +548,7 @@ def profileFits(outpath, base_name, order_num, profile, header):
 
             
     fn = constructFileName(outpath, base_name, order_num, 'profile.fits')     
-    hdulist.writeto(fn, clobber=True)
+    hdulist.writeto(fn, overwrite=True)
     log_fn(fn)
     return
     
@@ -753,7 +753,7 @@ def fluxFitsTable(outpath, base_name, order_num, wave, flux, sky, synth_sky, err
                 fits.Column(name='trace_fit (pix)', format='1D', array=trace_fit),
                 fits.Column(name='fit_res (pix)', format='1D', array=trace_mean - trace_fit)])
     fn = constructFileName(outpath, base_name, order_num, 'flux_tbl.fits')   
-    tbhdu.writeto(fn, clobber=True)
+    tbhdu.writeto(fn, overwrite=True)
     log_fn(fn)
     return
 
@@ -858,7 +858,7 @@ def fitsSpectrum(outpath, base_name, title, order_num, y_units, cont, wave, head
             pass
             
     fn = constructFileName(outpath, base_name, order_num, title + '.fits')     
-    hdulist.writeto(fn, clobber=True)
+    hdulist.writeto(fn, overwrite=True)
     log_fn(fn)
     return
 
@@ -879,7 +879,7 @@ def fitsSpectrumWave(outpath, base_name, title, order_num, y_units, cont, wave, 
             pass
             
     fn = constructFileName(outpath, base_name, order_num, title + '.fits')     
-    hdulist.writeto(fn, clobber=True)
+    hdulist.writeto(fn, overwrite=True)
     log_fn(fn)
     return
 
@@ -907,7 +907,7 @@ def fitsSpectrumAll(outpath, base_name, title, order_num, cont, wave, noise, sky
             pass
             
     fn = constructFileName(outpath, base_name, order_num, title + '.fits')     
-    hdulist.writeto(fn, clobber=True)
+    hdulist.writeto(fn, overwrite=True)
     log_fn(fn)
     return
 
@@ -965,7 +965,7 @@ def fitsSpectrum2(outpath, base_name, title, order_num, y_units, cont, wave1, wa
             pass
             
     fn = constructFileName(outpath, base_name, order_num, title + '.fits')     
-    hdulist.writeto(fn, clobber=True)
+    hdulist.writeto(fn, overwrite=True)
     log_fn(fn)
     return
 
@@ -1004,7 +1004,7 @@ def multiSpectrumPlot(outpath, base_name, order, y_units, cont, sky, noise, wave
 #     hdulist[0].header['object'] = '511 Davida'
 #     fits_fn = outpath + '/' + base_name + '_' + str(order) + '_' + title + '.fits'
 #     logger.info('writing ' + title + ' plot for order ' + str(order) + ' to ' + fits_fn)
-#     hdulist.writeto(fits_fn, clobber=True)
+#     hdulist.writeto(fits_fn, overwrite=True)
     
 
 
@@ -1082,7 +1082,7 @@ def wavelengthCalFitsTable(outpath, base_name, order, col, source, wave_exp, wav
                 fits.Column(name='disp (Angstroms/pixel)', format='1D', array=slope)]))
     thdulist = fits.HDUList([prihdu, tbhdu]) 
     fn = constructFileName(outpath, base_name, None, 'wavecal_tbl.fits')   
-    thdulist.writeto(fn, clobber=True)         
+    thdulist.writeto(fn, overwrite=True)         
     log_fn(fn)
     return
     
@@ -1176,7 +1176,7 @@ def twoDimOrderFits(outpath, base_name, order_num, data, header):
             pass
             
     fn = constructFileName(outpath, base_name, order_num, 'order.fits')
-    hdulist.writeto(fn, clobber=True)
+    hdulist.writeto(fn, overwrite=True)
     log_fn(fn)
     return
 
@@ -1194,7 +1194,7 @@ def twoDimNoiseOrderFits(outpath, base_name, order_num, data, header):
             pass
             
     fn = constructFileName(outpath, base_name, order_num, 'noiseorder.fits')
-    hdulist.writeto(fn, clobber=True)
+    hdulist.writeto(fn, overwrite=True)
     log_fn(fn)
     return
 

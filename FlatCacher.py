@@ -60,7 +60,7 @@ class FlatCacher:
             for k in ['GAIN.SPE', 'FREQ.SPE']:
                 if hdu.header[k]:
                     hdu.header.pop(k)
-            hdu.writeto(self.flatDir + '/' + fn, clobber=True)
+            hdu.writeto(self.flatDir + '/' + fn, overwrite=True)
             return(flat)
         else:
             self.logger.debug('reusing flat ' + fn)
