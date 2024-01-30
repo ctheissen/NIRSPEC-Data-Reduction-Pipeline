@@ -239,10 +239,10 @@ class Flat:
         if config.params['debug_tracing'] is True:
             print(rolled)
             print(self.topEdgeImg)
-            print(self.topEdgeProfile)
-            print(self.topEdgePeaks)
             print(self.botEdgeImg)
+            print(self.topEdgeProfile)
             print(self.botEdgeProfile)
+            print(self.topEdgePeaks)
             print(self.botEdgePeaks)
 
             fig1 = plt.figure(2647, figsize=(10,6))
@@ -268,7 +268,7 @@ class Flat:
         edgeProfile[0:15] = 0 # mask out the first few pixels (maybe this is a dirty fix)
         peak_rows = argrelextrema(edgeProfile, np.greater, order=35)[0]
         peak_intensities = edgeProfile[peak_rows]
-        tall_peaks_i = np.where(peak_intensities > (np.amax(peak_intensities) * 0.10))
+        tall_peaks_i = np.where(peak_intensities > (np.amax(peak_intensities) * 0.05)) # made this lower to find more orders
         
         return(peak_rows[tall_peaks_i[0]])
         
