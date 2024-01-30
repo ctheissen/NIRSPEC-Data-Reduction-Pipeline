@@ -100,8 +100,9 @@ def process_frame(fn1, fn2, obj_B_fn, out_dir, dark=None, eta=None, arc=None, ov
             raise DrpException.DrpException('NAXIS1 != {}'.format(nirspec_constants.N_COLS_upgrade))
         if obj_header['NAXIS2'] != nirspec_constants.N_ROWS_upgrade:
             raise DrpException.DrpException('NAXIS2 != {}'.format(nirspec_constants.N_COLS_upgrade))
-        filtername1, filtername2 = obj_header['SCIFILT2'], ''
+        filtername1, filtername2 = obj_header['SCIFILT1'], ''
         if obj_header['SCIFILT1'] == 'AO-stop': filtername2 = '-AO'
+        if obj_header['SCIFILT1'] == 'Kband-new': filtername1 = 'Kband-new'
         if filtername1.upper()+filtername2.upper() not in nirspec_constants.filter_names:
             raise DrpException.DrpException('unsupported filter: {}'.format(obj_header['SCIFILT2']))
     else:

@@ -644,7 +644,7 @@ def identify(sky, wavelength_scale_shifted, oh_wavelengths, oh_intensities, eta=
                         # removed doublet fails)
                         yslice = np.array(bigohy2[locx[0] - 2 * happened:locx[-1] - 2 * happened + 1])
  
-                        locxfix = np.zeros(2, dtype=np.int)
+                        locxfix = np.zeros(2, dtype=np.int32)
  
                         if len(yslice) > 0:
                             # location of the peak in the yslice

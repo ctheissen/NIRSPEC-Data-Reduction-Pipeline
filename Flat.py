@@ -46,6 +46,7 @@ class Flat:
         if nirspec_constants.upgrade: 
             filtername1, filtername2 = self.header['SCIFILT2'], ''
             if self.header['SCIFILT1'] == 'AO-stop': filtername2 = '-AO'
+            if self.header['SCIFILT1'] == 'Kband-new': filtername1 = 'Kband-new'
             self.filterName = filtername1.upper()+filtername2.upper()
         else:
             self.filterName = self.header['filname']

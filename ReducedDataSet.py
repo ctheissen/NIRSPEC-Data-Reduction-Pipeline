@@ -145,6 +145,8 @@ class ReducedDataSet:
             filtername1, filtername2 = self.header['SCIFILT2'], ''
             if self.header['SCIFILT1'] == 'AO-stop': 
                 filtername2 = '-AO'
+            if self.header['SCIFILT1'] == 'Kband-new': 
+                filtername1 = 'Kband-new'
             return filtername1.upper()+filtername2.upper()
         return self.header['filname']
         

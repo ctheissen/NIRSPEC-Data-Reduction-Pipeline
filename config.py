@@ -72,7 +72,8 @@ starting_order = {
         'NIRSPEC-4': 61, 
         'NIRSPEC-5': 53, 
         'NIRSPEC-6': 49, 
-        'NIRSPEC-7': 41,
+        'NIRSPEC-7': 41, 
+        'KBAND-NEW': 38,
         'K-AO': 38
 }
 
@@ -88,6 +89,7 @@ max_edge_location_error = {
         'NIRSPEC-5': 50, 
         'NIRSPEC-6': 20, 
         'NIRSPEC-7': 100, 
+        'KBAND-NEW': 60, 
         'K-AO': 60  
 }
 
@@ -109,7 +111,8 @@ long_slit_cutout_padding = {
     'NIRSPEC-4': 0, 
     'NIRSPEC-5': 0, 
     'NIRSPEC-6': 1, 
-    'NIRSPEC-7': 3,
+    'NIRSPEC-7': 3, 
+    'KBAND-NEW': 3,
     'K-AO': 0        
 }
 short_slit_cutout_padding = {
@@ -119,7 +122,8 @@ short_slit_cutout_padding = {
     'NIRSPEC-4': 1, 
     'NIRSPEC-5': 1, 
     'NIRSPEC-6': 1, 
-    'NIRSPEC-7': 3,
+    'NIRSPEC-7': 3, 
+    'KBAND-NEW': 3,
     'K-AO': 0          
 }
 
@@ -130,7 +134,8 @@ extra_cutout = {
     'NIRSPEC-4': 10, 
     'NIRSPEC-5': 10, 
     'NIRSPEC-6': 10, 
-    'NIRSPEC-7': 10,
+    'NIRSPEC-7': 10, 
+    'KBAND-NEW': 10,
     'K-AO': 10          
 }
 
