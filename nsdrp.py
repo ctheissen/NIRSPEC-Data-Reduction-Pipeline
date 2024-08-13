@@ -123,6 +123,7 @@ def init(out_dir, in_dir = None):
     """
     
     # create output directory and log subdirectory if -subdirs not set
+    print(out_dir)
     if not os.path.exists(out_dir):
         try: 
             os.makedirs(out_dir)
@@ -135,6 +136,7 @@ def init(out_dir, in_dir = None):
         config.params['log_dir'] = log_dir
         if not os.path.exists(log_dir):
             try:
+                print(log_dir)
                 os.makedirs(log_dir)
             except:
                 raise IOError('log directory {} does not exist and cannot be created'.format(log_dir))

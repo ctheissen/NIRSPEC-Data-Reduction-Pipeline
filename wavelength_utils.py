@@ -908,7 +908,7 @@ def twodfit(dataX, dataY, dataZ):
 #     newoh = 9999
     newoh = None
 
-    dataXX, dataYY = scipy.meshgrid(dataX, dataY)
+    dataXX, dataYY = np.meshgrid(dataX, dataY)
 
     # # guess initial values for parameters
     p0 = [137.9, 0., 1. / 36, 750000, 10, 0.]

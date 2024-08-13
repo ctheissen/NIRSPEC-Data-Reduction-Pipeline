@@ -14,7 +14,8 @@ import Flat
 from logging import INFO
 import Order
 import image_lib
-import imp
+try: import imp
+except: import importlib as imp
 import fixpix
 import nirspec_constants
 
