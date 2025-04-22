@@ -1,4 +1,4 @@
-import importlib
+import importlib.util
 
 modules = ['os', 'numpy', 'math', 'subprocess', 'fnmatch', 'logging', 'pylab', 'errno', 'datetime', 
            'verboselogs', 'skimage',

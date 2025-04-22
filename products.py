@@ -281,10 +281,10 @@ def gen(reduced, out_dir, eta=None, arc=None):
         for frame in reduced.frames:
             
             spectrumPlot(out_dir, reduced.baseNames[frame], 'flux', order.flatOrder.orderNum, 
-                'counts/s', order.objSpec[frame]/order.integrationTime, order.waveScale, order.calMethod)
+                'counts/s', order.objSpec[frame], order.waveScale, order.calMethod)
              
             fitsSpectrum(out_dir, reduced.baseNames[frame], 'flux', order.flatOrder.orderNum, 
-                'counts/s', order.objSpec[frame]/order.integrationTime, order.waveScale, header)
+                'counts/s', order.objSpec[frame], order.waveScale, header)
 
             asciiSpectrum(out_dir, reduced.baseNames[frame], 'flux', order.flatOrder.orderNum, 
                 order.waveScale, order.objSpec[frame], order.noiseSpec[frame])
@@ -299,9 +299,9 @@ def gen(reduced, out_dir, eta=None, arc=None):
         for frame in reduced.frames:
 
             fitsSpectrumAll(out_dir, reduced.baseNames[frame], 'all', order.flatOrder.orderNum, 
-                order.objSpec[frame]/order.integrationTime, 
+                order.objSpec[frame], 
                 order.waveScale,
-                order.noiseSpec[frame]/order.integrationTime, 
+                order.noiseSpec[frame], 
                 order.skySpec[frame]/order.integrationTime,
                 header)
 
@@ -337,17 +337,17 @@ def gen(reduced, out_dir, eta=None, arc=None):
 
         for frame in reduced.frames:
             spectrumPlot(out_dir, reduced.baseNames[frame], 'noise', order.flatOrder.orderNum, 
-                'counts/s', order.noiseSpec[frame]/order.integrationTime, order.waveScale, order.calMethod)
+                'counts/s', order.noiseSpec[frame], order.waveScale, order.calMethod)
               
             fitsSpectrum(out_dir, reduced.baseNames[frame], 'noise', order.flatOrder.orderNum, 
-                'counts/s', order.noiseSpec[frame]/order.integrationTime, order.waveScale, header)
+                'counts/s', order.noiseSpec[frame], order.waveScale, header)
 
         for frame in reduced.frames:
             spectrumPlot2(out_dir, reduced.baseNames[frame], 'flux_vs_noise', order.flatOrder.orderNum, 
-                'counts/s', order.objSpec[frame]/order.integrationTime, order.noiseSpec[frame]/order.integrationTime, order.waveScale, order.calMethod)
+                'counts/s', order.objSpec[frame], order.noiseSpec[frame], order.waveScale, order.calMethod)
               
             fitsSpectrum2(out_dir, reduced.baseNames[frame], 'flux_vs_noise', order.flatOrder.orderNum, 
-                'counts/s', order.objSpec[frame]/order.integrationTime, order.noiseSpec[frame]/order.integrationTime, order.waveScale, header)
+                'counts/s', order.objSpec[frame], order.noiseSpec[frame], order.waveScale, header)
 
         #
         # generate multiSplectrumPlot to spectra
@@ -363,9 +363,9 @@ def gen(reduced, out_dir, eta=None, arc=None):
         #
         for frame in order.frames:
             twoDimOrderPlot(out_dir, order.baseNames[frame], 'rectified order image', 'order.png', 
-                order.flatOrder.orderNum, order.ffObjImg[frame], order.waveScale, order.calMethod)
-            twoDimOrderFits(out_dir, order.baseNames[frame], order.flatOrder.orderNum, 
-                order.ffObjImg[frame], header)
+                order.flatOrder.orderNum, order.ffObjImg[frame]/order.integrationTime, order.waveScale, order.calMethod)
+            twoDimOrderFits(out_dir, order.baseNames[frame], 
+                order.flatOrder.orderNum, order.ffObjImg[frame]/order.integrationTime, header)
         #
         # spectrally rectified order plot 2-d image plot and FITS file
         #
@@ -376,7 +376,7 @@ def gen(reduced, out_dir, eta=None, arc=None):
         #        order.ffObjImg[frame], header)
 
         for frame in order.frames:
-            twoDimNoiseOrderPlot(out_dir, order.baseNames[frame], 'noise order image', 'noiseorder.png', 
+            twoDimOrderPlot(out_dir,      order.baseNames[frame], 'noise order image', 'noiseorder.png', 
                 order.flatOrder.orderNum, order.noiseImg[frame], order.waveScale, order.calMethod)
             twoDimNoiseOrderFits(out_dir, order.baseNames[frame], 
                 order.flatOrder.orderNum, order.noiseImg[frame], header)
@@ -558,7 +558,7 @@ def profilePlot(outpath, base_name, order_num, profile, peak, centroid,
             ext_range, sky_range_top, sky_range_bot, top_bg_mean, bot_bg_mean, gaussian, snr):
 
     pl.figure('spatial profile', facecolor='white')
-    pl.cla()
+    #pl.cla()
     pl.title('spatial profile, ' + base_name + ', order ' + str(order_num), fontsize=14)
 
     pl.xlabel('relative row (pixels)')
@@ -770,7 +770,7 @@ def spectrumPlot(outpath, base_name, title, order_num, y_units, cont, wave,
     pl.figure(title, facecolor='white')
     pl.clf()
     pl.title(title + ', ' + base_name + ", order " + str(order_num), fontsize=12)
-    pl.xlabel('Wavelength ($\AA$) (' + wave_note + ')')
+    pl.xlabel(r'Wavelength ($\AA$) (' + wave_note + ')')
     if len(y_units) > 0:
         pl.ylabel(title + '(' + y_units + ')')
     else:
@@ -929,7 +929,7 @@ def spectrumPlot2(outpath, base_name, title, order_num, y_units, cont1, cont2, w
     pl.figure(title, facecolor='white')
     pl.clf()
     pl.title(title + ', ' + base_name + ", order " + str(order_num), fontsize=12)
-    pl.xlabel('wavelength ($\AA$) (' + wave_note + ')')
+    pl.xlabel(r'wavelength ($\AA$) (' + wave_note + ')')
     if len(y_units) > 0:
         pl.ylabel(title + '(' + y_units + ')')
     else:
@@ -981,7 +981,7 @@ def multiSpectrumPlot(outpath, base_name, order, y_units, cont, sky, noise, wave
     pl.figure(title, facecolor='white')
     pl.clf()
     pl.title(title + ', ' + base_name + ", order " + str(order), fontsize=12)
-    pl.xlabel('Wavelength ($\AA$)')
+    pl.xlabel(r'Wavelength ($\AA$)')
     pl.ylabel(title + '(' + y_units + ')')
     pl.grid(True)
     
@@ -1103,9 +1103,9 @@ def twoDimOrderPlot(outpath, base_name, title, base_filename, order_num, data, x
         x_scale:
     """
     pl.figure('2d order image', facecolor='white', figsize=(8, 5))
-    pl.cla()
+    #pl.cla()
     pl.title(title + ', ' + base_name + ", order " + str(order_num), fontsize=14)
-    pl.xlabel('wavelength($\AA$) (' + wave_note + ')', fontsize=12)
+    pl.xlabel(r'wavelength($\AA$) (' + wave_note + ')', fontsize=12)
     pl.ylabel('row (pixel)', fontsize=12)
     
     pl.imshow(exposure.equalize_hist(data), origin='lower', 
@@ -1124,44 +1124,6 @@ def twoDimOrderPlot(outpath, base_name, title, base_filename, order_num, data, x
         
     return
 
-
-
-def twoDimNoiseOrderPlot(outpath, base_name, title, base_filename, order_num, data, x_scale,
-            wave_note='unknown'):
-    """
-    Produces a generic 2-d image plot.
-    
-    Arguments:
-        output: Directory path of root products directory.
-        base_name: Base name of object frame.
-        title: Title of plot, e.g. rectified order image.
-        base_filename:
-        order_num:
-        data:
-        x_scale:
-    """
-    pl.figure('2d order image', facecolor='white', figsize=(8, 5))
-    pl.cla()
-    pl.title(title + ', ' + base_name + ", order " + str(order_num), fontsize=14)
-    pl.xlabel('wavelength($\AA$) (' + wave_note + ')', fontsize=12)
-    pl.ylabel('row (pixel)', fontsize=12)
-    
-    pl.imshow(exposure.equalize_hist(data), origin='lower', 
-                  extent=[x_scale[0], x_scale[-1], 0, data.shape[0]], aspect='auto')      
-       
-#    pl.colorbar()
-#    pl.set_cmap('jet')
-    pl.set_cmap('gray')
-#     pl.set_cmap('Blues_r')
-    pl.minorticks_on()
-
-    fn = constructFileName(outpath, base_name, order_num, base_filename)
-    savePreviewPlot(fn)
-    log_fn(fn)
-    pl.close()
-        
-    return
-    
 
 
 def twoDimOrderFits(outpath, base_name, order_num, data, header):     

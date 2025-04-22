@@ -39,12 +39,18 @@ class GratingEq:
                                     'r1': 0.23686484, 'r2': -33685.61,  'z0': 14901.32};   
                                                  
             coeffs['NIRSPEC-5'] = { 'c1': 0.5622344034730155, 'c2': -62043.335607817644, 'y0': 29136.917162144724,
+                                    'r1': 0.35065575, 'r2': -33928.81,  'z0': 15115.5859}; 
+                                                 
+            coeffs['HBAND-NEW'] = { 'c1': 0.5622344034730155, 'c2': -62043.335607817644, 'y0': 29136.917162144724,
                                     'r1': 0.35065575, 'r2': -33928.81,  'z0': 15115.5859};      
         
             coeffs['NIRSPEC-4'] = { 'c1': 0.37318182, 'c2': -36031.358, 'y0': 16009.5052,
                                     'r1': 0.35333187, 'r2': -33646.524, 'z0': 14908.2313};    
         
             coeffs['NIRSPEC-3'] = { 'c1': 0.5674485087335116, 'c2': 101042.23874153013, 'y0': -62607.73168000235,
+                                    'r1': 0.35514352, 'r2': -36175.709, 'z0': 16283.995}; 
+
+            coeffs['JBAND-NEW'] = { 'c1': 0.5674485087335116, 'c2': 101042.23874153013, 'y0': -62607.73168000235,
                                     'r1': 0.35514352, 'r2': -36175.709, 'z0': 16283.995};    
                                 
             coeffs['NIRSPEC-2'] = { 'c1': 0.49449345, 'c2': -35965.39,  'y0': 15987.1423,
@@ -152,6 +158,13 @@ class GratingEq:
                 if 'NIRSPEC-5' in filtername:
                     k3, k4 = 190261.25515094888, 5178.874050953666
 
+                if 'JBAND-NEW' in filtername:
+                    #k3, k4 = 6635335.343062301, 194638.89613176414
+                    k3, k4 = 426.127627220973, 9.702320281279478
+
+                if 'HBAND-NEW' in filtername:
+                    k3, k4 = 9.9488e1, 1.0517e0
+
                 if 'K-' in filtername:
                     k3, k4 = -3.75106282e6, -1.05224419e5
 
@@ -194,6 +207,16 @@ class GratingEq:
                     self.logger.info('applying N-5 long slit correction')
                     left_top_row += 10
                     left_bot_row += 10
+
+                if 'JBAND-NEW' in filtername:
+                    self.logger.info('applying JBAND long slit correction')
+                    left_top_row -= 25
+                    left_bot_row -= 25 
+                    
+                if 'HBAND-NEW' in filtername:
+                    self.logger.info('applying HBAND long slit correction')
+                    left_top_row += 10
+                    left_bot_row += 10
                     
                 if '6' in filtername:
                     self.logger.info('applying N-6 long slit correction')
@@ -233,6 +256,12 @@ class GratingEq:
                             ' pixel N-4,5,6 filter y corr for filter ' + filtername)
                 left_top_row += filter_4_5_6_y_corr
                 left_bot_row += filter_4_5_6_y_corr
+
+            elif 'HBAND-NEW' in filtername:
+                self.logger.debug('applying +' + str(filter_4_5_6_y_corr) + 
+                            ' pixel HBAND-NEW filter y corr for filter ' + filtername)
+                left_top_row += filter_4_5_6_y_corr
+                left_bot_row += filter_4_5_6_y_corr
                 
             elif 'NIRSPEC-3' in filtername:
                 if const.upgrade:
@@ -241,6 +270,16 @@ class GratingEq:
                 else:
                     self.logger.debug('applying +' + str(filter_3_y_corr) + 
                                 ' pixel N-3 filter y corr for filter ' + filtername )
+                    left_top_row += filter_3_y_corr
+                    left_bot_row += filter_3_y_corr
+
+            elif 'JBAND-NEW' in filtername:
+                if const.upgrade:
+                    left_top_row += 15
+                    left_bot_row += 15
+                else:
+                    self.logger.debug('applying +' + str(filter_3_y_corr) + 
+                                ' pixel JBAND-NEW filter y corr for filter ' + filtername )
                     left_top_row += filter_3_y_corr
                     left_bot_row += filter_3_y_corr
                 
@@ -255,7 +294,7 @@ class GratingEq:
                 left_top_row += filter_K_y_corr
                 left_bot_row += filter_K_y_corr
                 
-                self.logger.info('order width = {:.0f} pixels'.format(left_top_row - left_bot_row))
+            self.logger.info('order width = {:.0f} pixels'.format(left_top_row - left_bot_row))
             
         wavelength_shift = 0
         

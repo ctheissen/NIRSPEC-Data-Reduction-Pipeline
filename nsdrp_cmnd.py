@@ -103,7 +103,7 @@ def process_frame(fn1, fn2, obj_B_fn, out_dir, dark=None, eta=None, arc=None, ov
         filtername1, filtername2 = obj_header['FILTER'], ''
         if obj_header['SCIFILT1'] == 'AO-stop': filtername2 = '-AO'
         if obj_header['FILTER'] == 'Kband-new': filtername1 = 'Kband-new'
-        print(filtername1.upper()+filtername2.upper())
+        #print(filtername1.upper()+filtername2.upper())
         if filtername1.upper()+filtername2.upper() not in nirspec_constants.filter_names:
             raise DrpException.DrpException('unsupported filter: {}'.format(obj_header['FILTER']))
     else:
@@ -123,7 +123,7 @@ def process_frame(fn1, fn2, obj_B_fn, out_dir, dark=None, eta=None, arc=None, ov
     
     if obj_B_fn is not None:
         # confirm that A and B are not the same files
-        if obj_fn == obj_B_fn:
+        if obj_fn == obj_B_fn and override == False:
             raise DrpException.DrpException('frames A and B are the same')
         
         obj_B_header = fits.PrimaryHDU.readfrom(obj_B_fn, ignore_missing_end=True).header

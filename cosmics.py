@@ -111,7 +111,7 @@ class cosmicsImage:
         """
         self.rawarray = rawarray + pssl # internally, we will always work "with sky".
         self.cleanarray = self.rawarray.copy() # In lacosmiciteration() we work on this guy
-        self.mask = np.cast['bool'](np.zeros(self.rawarray.shape)) # All False, no cosmics yet
+        self.mask = np.asarray(np.zeros(self.rawarray.shape, dtype=bool)) # All False, no cosmics yet
 
         self.gain = gain
         self.readnoise = readnoise
@@ -220,18 +220,18 @@ class cosmicsImage:
         #print(cosmicindices)
 
         # We put cosmic ray pixels to np.Inf to flag them :
-        self.cleanarray[mask] = np.Inf
+        self.cleanarray[mask] = np.inf
 
         # Now we want to have a 2 pixel frame of Inf padding around our image.
         w = self.cleanarray.shape[0]
         h = self.cleanarray.shape[1]
-        padarray = np.zeros((w+4,h+4))+np.Inf
+        padarray = np.zeros((w+4,h+4))+np.inf
         padarray[2:w+2,2:h+2] = self.cleanarray.copy() # that copy is important, we need 2 independent arrays
 
         # The medians will be evaluated in this padarray, skipping the np.Inf.
         # Now in this copy called padarray, we also put the saturated stars to np.Inf, if available :
         if self.satstars is not None:
-            padarray[2:w+2,2:h+2][self.satstars] = np.Inf
+            padarray[2:w+2,2:h+2][self.satstars] = np.inf
             # Viva python, I tested this one, it works...
 
         # A loop through every cosmic pixel :
@@ -241,7 +241,7 @@ class cosmicsImage:
             cutout = padarray[x:x+5, y:y+5].ravel() # remember the shift due to the padding !
             #print(cutout)
             # Now we have our 25 pixels, some of them are np.Inf, and we want to take the median
-            goodcutout = cutout[cutout != np.Inf]
+            goodcutout = cutout[cutout != np.inf]
             #print(len(goodcutout))
 
             if len(goodcutout) >= 25 :
@@ -337,7 +337,7 @@ class cosmicsImage:
             if np.sum(overlap) > 0:
                 outmask = np.logical_or(outmask, thisisland) # we add thisisland to the mask
 
-        self.satstars = np.cast['bool'](outmask)
+        self.satstars = np.asarray(outmask, dtype=bool) 
 
         if verbose:
                 print("Mask of saturated stars done")
@@ -483,7 +483,9 @@ class cosmicsImage:
             print("Finding neighboring pixels affected by cosmic rays ...")
 
         # We grow these cosmics a first time to determine the immediate neighborhod  :
-        growcosmics = np.cast['bool'](signal.convolve2d(np.cast['float32'](cosmics), growkernel, mode="same", boundary="symm"))
+        #growcosmics = np.cast['bool'](signal.convolve2d(np.cast['float32'](cosmics), growkernel, mode="same", boundary="symm"))
+        #growcosmics = np.asarray(signal.convolve2d(np.cast['float32'](cosmics), growkernel, mode="same", boundary="symm"), dtype=bool) 
+        growcosmics = np.asarray(signal.convolve2d(np.asarray(cosmics, dtype=float), growkernel, mode="same", boundary="symm"), dtype=bool) 
 
         # From this grown set, we keep those that have sp > sigmalim
         # so obviously not requiring sp/f > objlim, otherwise it would be pointless
@@ -491,7 +493,9 @@ class cosmicsImage:
 
         # Now we repeat this procedure, but lower the detection limit to sigmalimlow :
 
-        finalsel = np.cast['bool'](signal.convolve2d(np.cast['float32'](growcosmics), growkernel, mode="same", boundary="symm"))
+        #finalsel = np.cast['bool'](signal.convolve2d(np.cast['float32'](growcosmics), growkernel, mode="same", boundary="symm"))
+        #finalsel = np.asarray(signal.convolve2d(np.cast['float32'](growcosmics), growkernel, mode="same", boundary="symm"), dtype=bool) 
+        finalsel = np.asarray(signal.convolve2d(np.asarray(growcosmics, dtype=float), growkernel, mode="same", boundary="symm"), dtype=bool) 
         finalsel = np.logical_and(sp > self.sigcliplow, finalsel)
 
         # Again, we have to kick out pixels on saturated stars :
@@ -657,7 +661,8 @@ def tofits(outfilename, pixelarray, hdr = None, verbose = True):
         print("FITS export shape : (%i, %i)" % (pixelarrayshape[0], pixelarrayshape[1]))
 
     if pixelarray.dtype.name == "bool":
-        pixelarray = np.cast["uint8"](pixelarray)
+        #pixelarray = np.cast["uint8"](pixelarray)
+        pixelarray = np.asarray(pixelarray, dtype=np.uint8)
 
     if os.path.isfile(outfilename):
         os.remove(outfilename)

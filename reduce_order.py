@@ -29,6 +29,7 @@ def reduce_order(order, eta=None, arc=None):
     #print('REDUCE ORDER BEGINNING', order.flatOrder.orderNum)
     #if order.flatOrder.orderNum != 33: return 0
     #if order.flatOrder.orderNum != 37: return 0
+    #if order.flatOrder.orderNum != 57: return 0
     #if order.flatOrder.orderNum != 68: return 0
     #if order.flatOrder.orderNum != 77: return 0
     #sys.exit()
@@ -279,7 +280,7 @@ def reduce_order(order, eta=None, arc=None):
     for frame in order.frames:
         
         order.noiseImg[frame] = nirspec_lib.calc_noise_img(
-                order.objImg[frame], order.flatOrder.rectFlatImg, order.integrationTime)
+                order.objImg[frame], order.flatOrder.rectFlatImg, order.integrationTime, order)
 
     # extract spectra
     __extract_spectra(order, eta=eta, arc=arc)
@@ -436,7 +437,7 @@ def __rectify_spatial(order, eta=None, arc=None):
     for frame in order.frames:
         if frame == 'AB': continue # Skip the AB frame, we will subtract them after rectification
 
-        logger.info('attempting spatial rectification of frame {} using object trace'.format(frame))
+        logger.info('attempting spatial rectification of frame {}'.format(frame))
 
         try:
             if frame in ['A', 'B']:
@@ -444,7 +445,7 @@ def __rectify_spatial(order, eta=None, arc=None):
                 if config.params['onoff'] == True and frame == 'B': 
                     order.objImg[frame]   = image_lib.rectify_spatial(order.objImg[frame], polyVals1)
                     order.ffObjImg[frame] = image_lib.rectify_spatial(order.ffObjImg[frame], polyVals2)
-                    logger.info('frame {}, order {} rectified using object trace'.format(
+                    logger.info('frame {}, order {} rectified using trace'.format(
                         frame, order.flatOrder.orderNum))
                 
                 elif config.params['spatial_rect_flat'] == True:
@@ -454,11 +455,16 @@ def __rectify_spatial(order, eta=None, arc=None):
                         order.objImg[frame], order.flatOrder.smoothedSpatialTrace)
                     order.ffObjImg[frame] = image_lib.rectify_spatial(
                         order.ffObjImg[frame], order.flatOrder.smoothedSpatialTrace)
+                    
+                    polyVals1 = polyVals2 = order.flatOrder.smoothedSpatialTrace
 
                     logger.info('frame {}, order {} rectified in the spatial dimension using flat frame'.format(
                         frame, order.flatOrder.orderNum))
 
                 else:
+
+                    logger.info('order will be rectified in the spatial dimension using the using object trace')
+                    
                     #polyVals1             = cat.CreateSpatialMap(order.objImg[frame])  
                     polyVals1             = cat.CreateSpatialMap(order.objCutout[frame])  
                     order.objImg[frame]   = image_lib.rectify_spatial(order.objImg[frame], polyVals1)
@@ -478,13 +484,13 @@ def __rectify_spatial(order, eta=None, arc=None):
                         else:
                             order.etaImgB     = image_lib.rectify_spatial(order.etaImgB, polyVals1)
                             order.ffEtaImgB   = image_lib.rectify_spatial(order.ffEtaImgB, polyVals2)
-                            logger.info('etalon frame {}, order {} rectified using object trace'.format(
+                            logger.info('etalon frame {}, order {} rectified using trace'.format(
                                 frame, order.flatOrder.orderNum))
 
                     else:
                         order.etaImg      = image_lib.rectify_spatial(order.etaImg, polyVals1)
                         order.ffEtaImg    = image_lib.rectify_spatial(order.ffEtaImg, polyVals2)
-                        logger.info('etalon frame {}, order {} rectified using object trace'.format(
+                        logger.info('etalon frame {}, order {} rectified using trace'.format(
                             frame, order.flatOrder.orderNum))
 
                 if arc is not None:
@@ -495,13 +501,13 @@ def __rectify_spatial(order, eta=None, arc=None):
                         else:
                             order.arcImgB     = image_lib.rectify_spatial(order.arcImgB, polyVals1)
                             order.ffArcImgB   = image_lib.rectify_spatial(order.ffArcImgB, polyVals2)
-                            logger.info('arc lamp frame {}, order {} rectified using object trace'.format(
+                            logger.info('arc lamp frame {}, order {} rectified using trace'.format(
                                 frame, order.flatOrder.orderNum))
 
                     else:
                         order.arcImg      = image_lib.rectify_spatial(order.arcImg, polyVals1)
                         order.ffArcImg    = image_lib.rectify_spatial(order.ffArcImg, polyVals2)
-                        logger.info('arc lamp frame {}, order {} rectified using object trace'.format(
+                        logger.info('arc lamp frame {}, order {} rectified using trace'.format(
                             frame, order.flatOrder.orderNum))
             else:
                 order.objImg[frame]   = image_lib.rectify_spatial(order.objImg[frame], polyVals1)
@@ -686,14 +692,14 @@ def __extract_spectra(order, eta=None, arc=None):
                         order.topBgMean[frame], order.botBgMean[frame] = image_lib.extract_spectra(
                                 order.ffObjImg[frame], order.flatOrder.rectFlatImg, order.noiseImg[frame], 
                                 order.objWindow[frame], order.topSkyWindow[frame], 
-                                order.botSkyWindow[frame], eta=order.ffEtaImgB) 
+                                order.botSkyWindow[frame], order, eta=order.ffEtaImgB) 
             else:
                 # extract object, sky, etalon, and noise spectra for A and B and flat spectrum
                 order.objSpec[frame], order.flatSpec, order.etalonSpec, order.skySpec[frame], order.noiseSpec[frame], \
                         order.topBgMean[frame], order.botBgMean[frame] = image_lib.extract_spectra(
                                 order.ffObjImg[frame], order.flatOrder.rectFlatImg, order.noiseImg[frame], 
                                 order.objWindow[frame], order.topSkyWindow[frame], 
-                                order.botSkyWindow[frame], eta=order.ffEtaImg) 
+                                order.botSkyWindow[frame], order, eta=order.ffEtaImg) 
         
         elif arc is not None:
             if frame == 'B':
@@ -702,14 +708,14 @@ def __extract_spectra(order, eta=None, arc=None):
                         order.topBgMean[frame], order.botBgMean[frame] = image_lib.extract_spectra(
                                 order.ffObjImg[frame], order.flatOrder.rectFlatImg, order.noiseImg[frame], 
                                 order.objWindow[frame], order.topSkyWindow[frame], 
-                                order.botSkyWindow[frame], arc=order.ffArcImgB) 
+                                order.botSkyWindow[frame], order, arc=order.ffArcImgB) 
             else:
                 # extract object, sky, arc, and noise spectra for A and B and flat spectrum
                 order.objSpec[frame], order.flatSpec, order.arclampSpec, order.skySpec[frame], order.noiseSpec[frame], \
                         order.topBgMean[frame], order.botBgMean[frame] = image_lib.extract_spectra(
                                 order.ffObjImg[frame], order.flatOrder.rectFlatImg, order.noiseImg[frame], 
                                 order.objWindow[frame], order.topSkyWindow[frame], 
-                                order.botSkyWindow[frame], arc=order.ffArcImg)
+                                order.botSkyWindow[frame], order, arc=order.ffArcImg)
 
         else:
             # extract object, sky, and noise spectra for A and B and flat spectrum
@@ -717,7 +723,7 @@ def __extract_spectra(order, eta=None, arc=None):
                     order.topBgMean[frame], order.botBgMean[frame] = image_lib.extract_spectra(
                             order.ffObjImg[frame], order.flatOrder.rectFlatImg, order.noiseImg[frame], 
                             order.objWindow[frame], order.topSkyWindow[frame], 
-                            order.botSkyWindow[frame])  
+                            order.botSkyWindow[frame], order)  
 
     ### XXX TESTING AREA
     '''
@@ -852,9 +858,11 @@ def __calc_approximate_snr(order):
         if order.topBgMean[frame] is not None and order.botBgMean[frame] is not None:
             bg /= 2
             
-        order.snr[frame] = np.absolute(
-                np.mean(order.ffObjImg[frame]\
-                        [order.peakLocation[frame] : order.peakLocation[frame] + 1, :]) / bg)   
+        #order.snr[frame] = np.absolute(
+        #        np.mean(order.ffObjImg[frame]\
+        #                [order.peakLocation[frame] : order.peakLocation[frame] + 1, :]) / bg) 
+
+        order.snr[frame] = np.mean( np.absolute(order.objSpec[frame] / order.noiseSpec[frame]) ) 
         
         logger.info('frame {} signal-to-noise ratio = {:.1f}'.format(frame, order.snr[frame]))
         
@@ -940,18 +948,6 @@ def __find_spatial_profile_and_peak(order):
 
 
 
-def __calculate_SNR(order):
-    
-    bg = 0.0
-
-    if order.topBgMean is not None:
-        bg += order.topBgMean
-    if order.botBgMean is not None:
-        bg += order.botBgMean
-    if order.topBgMean is not None and order.botBgMean is not None:
-        bg /= 2
-    order.snr = np.absolute(np.mean(
-            order.ffObjImg['A'][order.peakLocation['A']:order.peakLocation['A'] + 1, :]) / bg)
     
     
     

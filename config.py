@@ -6,8 +6,8 @@ params['debug']                 = False     # comment
 params['no_cosmic']             = False     # cosmic ray rejection inhibited if True
 params['no_products']           = False     # data product generation inhibited if True
 params['obj_window']            = 9         # comment
-params['sky_window']            = 8         # comment
-params['sky_separation']        = 2         # comment
+params['sky_window']            = 10        # how many pixels wide the sky window is
+params['sky_separation']        = 5         # pixels away from object range
 params['upgrade']               = False     # New version of NIRSPEC (after Oct 2018)
 
 params['oh_filename']           = './ir_ohlines.dat'
@@ -69,8 +69,10 @@ starting_order = {
         'NIRSPEC-1': 80, 
         'NIRSPEC-2': 70, 
         'NIRSPEC-3': 67, 
+        'JBAND-NEW': 67, 
         'NIRSPEC-4': 61, 
         'NIRSPEC-5': 53, 
+        'HBAND-NEW': 53, 
         'NIRSPEC-6': 49, 
         'NIRSPEC-7': 41, 
         'KBAND-NEW': 38,
@@ -85,8 +87,10 @@ max_edge_location_error = {
         'NIRSPEC-1': 40, 
         'NIRSPEC-2': 50, 
         'NIRSPEC-3': 50, 
+        'JBAND-NEW': 50, 
         'NIRSPEC-4': 20, 
-        'NIRSPEC-5': 50, 
+        'NIRSPEC-5': 50,  
+        'HBAND-NEW': 50,
         'NIRSPEC-6': 20, 
         'NIRSPEC-7': 100, 
         'KBAND-NEW': 60, 
@@ -108,8 +112,10 @@ long_slit_cutout_padding = {
     'NIRSPEC-1': 0, 
     'NIRSPEC-2': 0, 
     'NIRSPEC-3': 0, 
+    'JBAND-NEW': 0, 
     'NIRSPEC-4': 0, 
-    'NIRSPEC-5': 0, 
+    'NIRSPEC-5': 0,
+    'HBAND-NEW': 0,  
     'NIRSPEC-6': 1, 
     'NIRSPEC-7': 3, 
     'KBAND-NEW': 3,
@@ -119,8 +125,10 @@ short_slit_cutout_padding = {
     'NIRSPEC-1': 0, 
     'NIRSPEC-2': 0, 
     'NIRSPEC-3': 1, 
+    'JBAND-NEW': 1, 
     'NIRSPEC-4': 1, 
     'NIRSPEC-5': 1, 
+    'HBAND-NEW': 1, 
     'NIRSPEC-6': 1, 
     'NIRSPEC-7': 3, 
     'KBAND-NEW': 3,
@@ -131,8 +139,10 @@ extra_cutout = {
     'NIRSPEC-1': 10, 
     'NIRSPEC-2': 10, 
     'NIRSPEC-3': 10, 
+    'JBAND-NEW': 10, 
     'NIRSPEC-4': 10, 
     'NIRSPEC-5': 10, 
+    'HBAND-NEW': 10, 
     'NIRSPEC-6': 10, 
     'NIRSPEC-7': 10, 
     'KBAND-NEW': 10,

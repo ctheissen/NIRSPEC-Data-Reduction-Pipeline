@@ -171,6 +171,14 @@ class ReducedDataSet:
 
     def getNCoadds(self):
         return self.header['coadds']
+
+
+    def getNReads(self):
+        return self.header['numreads']
+
+
+    def getReadTime(self):
+        return self.header['rditime']
     
 
     def getDate(self):
@@ -187,7 +195,7 @@ class ReducedDataSet:
             return self.header['ELAPTIME']
         except KeyError:
             if nirspec_constants.upgrade: 
-                return self.header['itime']/1000.
+                return self.header['itime']/1000. # convert from milliseconds to seconds
             else:
                 return(self.header['itime'])
             

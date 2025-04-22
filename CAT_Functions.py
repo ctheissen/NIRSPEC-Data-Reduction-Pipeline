@@ -106,7 +106,7 @@ def CreateSpatialMap(image, numrows=5, clip=15, cutoff=10, plot=False, plotvid=F
 			
 			if i == 0:
 				if plot:
-					fig0 = plt.figure(198, figsize=(8,6))
+					fig0 = plt.figure(199, figsize=(8,6))
 					ax1 = fig0.add_subplot(111)
 					#ax1.plot(np.arange(len(np.sum(image[clip:-clip, 0:numrows*2+1], axis=1))) + clip,
 					#	     np.sum(image[clip:-clip,0:numrows*2+1], axis=1))
@@ -129,7 +129,7 @@ def CreateSpatialMap(image, numrows=5, clip=15, cutoff=10, plot=False, plotvid=F
 				#print('Xs', Xs)
 				Ys = np.sum(image[range1:range2+1, 0:numrows*2+1], axis=1)
 				#print('Ys', Ys)
-				guess1 = Xs[np.where(Ys == np.ma.max(Ys))]
+				guess1 = Xs[np.where(Ys == np.ma.max(Ys))][0]
 				#print('Guess1', guess1)
 				#guess2 = signal.find_peaks_cwt(Ys, np.arange(8,20), min_length=9)
 				#print('Guess2', guess1)
@@ -178,7 +178,7 @@ def CreateSpatialMap(image, numrows=5, clip=15, cutoff=10, plot=False, plotvid=F
 			#print('Guess', guess1)
 			'''
 			if plot:
-				fig0 = plt.figure(198, figsize=(8,6))
+				fig0 = plt.figure(200, figsize=(8,6))
 				ax1 = fig0.add_subplot(111)
 				#ax1.plot(np.arange(len(np.sum(image[clip:-clip, i-numrows:i+numrows+1], axis=1))) + clip,
 				#         np.sum(image[clip:-clip,0:numrows+1], axis=1))
@@ -191,7 +191,7 @@ def CreateSpatialMap(image, numrows=5, clip=15, cutoff=10, plot=False, plotvid=F
 				#Ys = np.sum(image[clip:-clip, i-numrows:i+numrows+1], axis=1)
 				Xs     = np.arange(len(np.sum(image[range1:range2+1, i-numrows:i+numrows+1], axis=1))) + range1
 				Ys     = np.sum(image[range1:range2+1, i-numrows:i+numrows+1], axis=1)
-				guess1 = Xs[np.where(Ys == np.ma.max(Ys))]
+				guess1 = Xs[np.where(Ys == np.ma.max(Ys))][0]
 				#guess1 = popt[0]
 				#guess2, _ = signal.find_peaks(Ys, width=3)
 				#guess1 = Xs[np.where(Ys[guess2] == np.max(Ys[guess2]))]+clip

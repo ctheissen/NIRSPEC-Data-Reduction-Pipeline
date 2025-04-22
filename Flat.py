@@ -46,6 +46,8 @@ class Flat:
         if nirspec_constants.upgrade: 
             filtername1, filtername2 = self.header['SCIFILT2'], ''
             if self.header['SCIFILT1'] == 'AO-stop': filtername2 = '-AO'
+            if self.header['SCIFILT1'] == 'Jband-new': filtername1 = 'Jband-new'
+            if self.header['SCIFILT1'] == 'Hband-new': filtername1 = 'Hband-new'
             if self.header['SCIFILT1'] == 'Kband-new': filtername1 = 'Kband-new'
             self.filterName = filtername1.upper()+filtername2.upper()
         else:
@@ -173,8 +175,14 @@ class Flat:
                     fig = plt.figure(3898)
                     print('YESYESYES')
                     plt.imshow(self.flatImg, origin='lower', aspect='auto')
-                    plt.plot(flatOrder.topEdgeTrace, c='r', ls='--')
-                    plt.plot(flatOrder.botEdgeTrace, c='b', ls='--')
+                    try: 
+                        plt.plot(flatOrder.topEdgeTrace, c='r', ls='--')
+                    except:
+                        print('Cannot plot measured top')
+                    try:
+                        plt.plot(flatOrder.botEdgeTrace, c='b', ls='--')
+                    except:
+                        print('Cannot plot measured bot')
                     plt.minorticks_on()
                     fig.suptitle('TEST021')
                     plt.show()

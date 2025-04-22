@@ -333,6 +333,9 @@ def reduce_orders(reduced, eta=None, arc=None):
                     flatOrder.highestPoint, flatOrder.lowestPoint, flatOrder.cutoutPadding))  
         
         order.integrationTime = reduced.getIntegrationTime() # used in noise calc
+        order.coadds          = reduced.getNCoadds() # used in noise calc
+        order.numreads        = reduced.getNReads() # used in noise calc
+        order.readtime        = reduced.getReadTime() # used in noise calc
         
         try:
             

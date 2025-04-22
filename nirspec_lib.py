@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 logger = logging.getLogger('obj')
       
         
-def calc_noise_img(obj, flat, integration_time):
+def calc_noise_img(obj, flat, integration_time, order):
     """
     flat is expected to be normalized and both obj and flat are expected to be rectified
     """
@@ -23,24 +23,19 @@ def calc_noise_img(obj, flat, integration_time):
         G  = 2.85 # e-/ADU    
         RN = 10.  # e-/pixel
         DC = 0.67 # e-/second/pixel
+
+    # Reimplementation of noise
+    coadds   = order.coadds
+    numreads = order.numreads
+    readtime = order.readtime
+    divisor  = numreads * coadds
+
+    rdvar = (2. * RN ** 2) / numreads / coadds / integration_time ** 2 / G ** 2
+    crtn  = (1.0 - readtime * (numreads ** 2 - 1.0) / 3. / integration_time / numreads)
+
+    var   = np.absolute(obj/flat) * crtn / numreads / (coadds ** 2) / (integration_time ** 2) / G + rdvar # this is in counts/s
     
-    # calculate photon noise
-    noise = obj      # This is already in ADU!
-    #noise = obj / G  # This is in ADU (only works if obj is in electrons!)
-    #noise = obj * G  # This is in electrons
-    
-    # add read noise
-    noise += np.square(RN / G) # This is in ADU
-    #noise += np.square(RN) # This is in electrons
-    
-    # add dark current noise
-    noise += DC * integration_time / np.square(G) # This is in ADU
-    #noise += (DC / G) * integration_time # This is in electrons
-    
-    # divide by normalized flat squared
-    noise /= np.square(flat)
-    
-    return noise
+    return var
 
 
 ORDER_EDGE_SEARCH_WIDTH = 10

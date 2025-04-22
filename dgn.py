@@ -195,7 +195,7 @@ def edges_plot(outpath, base_name, top_profile, bot_profile, top_peaks, bot_peak
         endPix = 1024
 
     pl.figure('order edge profiles', facecolor='white', figsize=(10, 8))
-    pl.cla()
+    #pl.cla()
     pl.suptitle('order edge profiles, {}'.format(base_name), fontsize=14)
     
     tops_plot = pl.subplot(2, 1, 1)
@@ -227,7 +227,7 @@ def tops_bots_plot(outpath, base_name, tops, bots):
         endPix = 1024  
 
     pl.figure('edges', facecolor='white', figsize=(10, 6))
-    pl.cla()
+    #pl.cla()
     pl.suptitle('top and bottom order edges, {}'.format(base_name), fontsize=14)
 #     pl.set_cmap('Blues_r')
     pl.rcParams['xtick.labelsize'] = 8
@@ -270,7 +270,7 @@ def traces_plot(outpath, obj_base_name, flat_base_name, order_num, obj_img, flat
         endPix = 1024
 
     pl.figure('traces', facecolor='white', figsize=(10, 6))
-    pl.cla()
+    #pl.cla()
     pl.suptitle('order edge traces, {}, order {}'.format(obj_base_name, order_num), fontsize=14)
     pl.set_cmap('Blues_r')
     pl.rcParams['xtick.labelsize'] = 8
@@ -317,7 +317,7 @@ def order_location_plot(outpath, obj_base_name, flat_base_name, flat_img, obj_im
         endPix = 1024
 
     pl.figure('orders', facecolor='white', figsize=(10, 8))
-    pl.cla()
+    #pl.cla()
     pl.suptitle('order location and identification', fontsize=14)
     pl.set_cmap('Blues_r')
     pl.rcParams['xtick.labelsize'] = 8
@@ -370,7 +370,7 @@ def cutouts_plot(outpath, obj_base_name, flat_base_name, order_num, obj_img, fla
         endPix = 1024
 
     pl.figure('traces', facecolor='white', figsize=(10, 10))
-    pl.cla()
+    #pl.cla()
     pl.suptitle('order cutouts, {}, order {}'.format(obj_base_name, order_num), fontsize=14)
     pl.set_cmap('Blues_r')
 
@@ -418,7 +418,7 @@ def spatrect_plot(outpath, base_name, order_num, obj, flat):
         endPix = 1024
 
     pl.figure('spatially rectified', facecolor='white', figsize=(10, 10))
-    pl.cla()
+    #pl.cla()
     pl.suptitle('spatially rectified, {}, order {}'.format(base_name, order_num), fontsize=14)
     pl.set_cmap('Blues_r')
 
@@ -462,7 +462,7 @@ def specrect_plot(outpath, base_name, order_num, before, after):
         endPix = 1024
 
     pl.figure('before, after spectral rectify', facecolor='white', figsize=(10, 10))
-    pl.cla()
+    #pl.cla()
     pl.suptitle('before, after spectral rectify, {}, order {}'.format(
             base_name, order_num), fontsize=14)
     pl.set_cmap('Blues_r')
@@ -513,7 +513,7 @@ def specrect_plot2(outpath, base_name, order_num, before, after, eta=None, arc=N
         endPix = 1024
 
     pl.figure('spectral rectify', facecolor='white')
-    pl.cla()
+    #pl.cla()
     pl.title('spectral rectify, ' + base_name + ', order ' + str(order_num), fontsize=14)
 
     pl.xlabel('column (pixels)')
@@ -611,7 +611,7 @@ def skyLinesPlot(outpath, order, eta=None, arc=None):
         endPix = 1024
 
     pl.figure('sky/etalon/arc lines', facecolor='white', figsize=(14, 8))
-    pl.cla()
+    #pl.cla()
     pl.suptitle("sky/etalon/arc lines" + ', ' + order.baseNames['A'] + ", order " + 
             str(order.flatOrder.orderNum), fontsize=14)
 #     pl.rcParams['ytick.labelsize'] = 8
@@ -732,7 +732,7 @@ def wavelengthScalePlot(out_dir, base_name, order):
         endPix = 1024
 
     pl.figure('wavelength scale', facecolor='white')
-    pl.cla()
+    #pl.cla()
     pl.title('wavelength scale, ' + base_name + ', order ' + 
              str(order.flatOrder.orderNum), fontsize=14)
 

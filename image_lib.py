@@ -205,7 +205,7 @@ def get_extraction_ranges(image_width, peak_location, obj_w, sky_w, sky_dist):
 
 
    
-def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, eta=None, arc=None):
+def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, order, eta=None, arc=None):
     
     """
     """
@@ -245,10 +245,50 @@ def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, e
         bot_bg_mean = None
     
     sky_mean = (sky_top_sum + sky_bot_sum) / (len(sky_range_top) + len(sky_range_bot))
+    sky_mean = (sky_top_sum + sky_bot_sum) / (len(sky_range_top) + len(sky_range_bot))
+    
+    #print ('OBJ RANGE', obj_range)
+    #print(sky_range_top)
+    #print(sky_range_bot)
+    #print('SKY TOP', top_bg_mean)
+    #print('SKY BOT', bot_bg_mean)
+    #print('SKY MEAN', sky_mean)
+    
+    # Calculate the background
+    #print(obj[sky_range_top,:].shape)
+    #print(obj[sky_range_bot,:].shape)
+    sky_comb = np.concatenate((obj[sky_range_top,:]/order.integrationTime, obj[sky_range_bot,:]/order.integrationTime), axis=0)
+    #print(sky_comb.shape)
+    slit_bg    = np.nanmean(sky_comb, axis=0)
+    slit_bgvar = np.nanvar(sky_comb, axis=0)
+    #print('SLIT BG', slit_bg)
+    #print('SLIT BGVAR', slit_bgvar)
+
+    slit_var = noise[obj_range, :] # counts/s
+    #print('SLIT VAR1', slit_var)
+    slit_var += slit_bgvar
+    #print('SLIT VAR2', slit_var)
+
+    obj_slit = obj[obj_range, :] / order.integrationTime # counts/s
+    #print('OBJ SLIT', obj_slit)
+    obj_slit -= slit_bg
+    #print('OBJ SLIT2', obj_slit)
+
+    spectrum_flux = np.nansum(obj_slit, axis=0)
+    spectrum_var  = np.nansum(slit_var, axis=0)
+    spectrum_unc  = np.sqrt(np.abs(spectrum_var))
+
+    #print('S/N', spectrum_flux / spectrum_unc)
+    #print('SNR', np.mean(np.absolute(spectrum_flux / spectrum_unc)))
     """
-    print(top_bg_mean)
-    print(bot_bg_mean)
-    print(sky_mean)
+    import matplotlib.pyplot as plt
+    plt.figure(77)
+    plt.plot(spectrum_flux)
+    plt.plot(spectrum_unc)
+    plt.figure(777)
+    plt.plot(spectrum_flux / spectrum_unc)
+    plt.show()
+    sys.exit()
     """
 
 
@@ -289,6 +329,8 @@ def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, e
     plt.show()
     #sys.exit()
     '''
+    obj_sp   = spectrum_flux
+    noise_sp = spectrum_unc
     
     if eta is not None:
         #etalon_sum  = np.sum(eta[i, :] for i in obj_range) 
