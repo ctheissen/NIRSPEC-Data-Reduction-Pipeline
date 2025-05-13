@@ -516,6 +516,14 @@ def apply_wavelength_soln(reduced):
             logger.warning('using theoretical wavelength scale ')
             order.waveScale = order.flatOrder.gratingEqWaveScale
             order.calMethod = 'grating equation'
+
+        # Need a fix right here
+        #print(order.flatOrder.orderNum)
+        #print(str(reduced.getFullFilterName()))
+        #print('TRUE WAVESCALE NEW', np.min(order.waveScale))
+        if order.flatOrder.orderNum == 43 and str(reduced.getFullFilterName()) == 'HBAND-NEW-AO': 
+            order.waveScale -= 30
+        #print('TRUE WAVESCALE', np.min(order.waveScale))
                    
     return
     

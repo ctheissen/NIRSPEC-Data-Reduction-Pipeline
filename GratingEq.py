@@ -187,7 +187,8 @@ class GratingEq:
             filter_3_y_corr     = 50
             filter_1_y_corr     = 50
             if const.upgrade: 
-            	filter_1_y_corr     = 20
+                filter_1_y_corr     = 20
+                filter_J_y_corr     = 230
             filter_K_y_corr     = 70
         
             if '24' in slit:
@@ -274,14 +275,10 @@ class GratingEq:
                     left_bot_row += filter_3_y_corr
 
             elif 'JBAND-NEW' in filtername:
-                if const.upgrade:
-                    left_top_row += 15
-                    left_bot_row += 15
-                else:
-                    self.logger.debug('applying +' + str(filter_3_y_corr) + 
+                self.logger.debug('applying +' + str(filter_J_y_corr) + 
                                 ' pixel JBAND-NEW filter y corr for filter ' + filtername )
-                    left_top_row += filter_3_y_corr
-                    left_bot_row += filter_3_y_corr
+                left_top_row += filter_J_y_corr
+                left_bot_row += filter_J_y_corr
                 
             elif 'NIRSPEC-1' in filtername:
                 self.logger.debug('applying +' + str(filter_1_y_corr) + 
@@ -306,6 +303,8 @@ class GratingEq:
             if const.upgrade: wavelength_shift = 50.0
         elif order < 40:
             wavelength_shift = 70.0
+        elif order == 43:
+            if const.upgrade: wavelength_shift = 30.0
         elif order < 45:
             wavelength_shift = 60.0
         elif order < 51:

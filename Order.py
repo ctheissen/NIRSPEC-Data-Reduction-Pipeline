@@ -16,7 +16,7 @@ class Order:
                         
         """
 
-        self.frames = frames
+        self.frames    = frames
         self.baseNames = baseNames
         self.flatOrder = flatOrder
         
