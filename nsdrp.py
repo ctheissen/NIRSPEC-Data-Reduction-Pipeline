@@ -22,7 +22,7 @@ import nsdrp_koa
 #from DrpException import DrpException
 #import FlatCacher
 
-VERSION = '0.9.17.c13'
+VERSION = '0.9.17.c14'
 
 warnings.filterwarnings('ignore', category=UserWarning, append=True)
 

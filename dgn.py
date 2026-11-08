@@ -11,7 +11,7 @@ from skimage import exposure
 import config
 import nirspec_constants as const
 
-import scipy.misc
+# import scipy.misc  # unused; scipy.misc is removed in SciPy 2.0
 #try: 
 #    from scipy.misc.pilutil import imresize # deprecated in newer versions of scipy
 #except:

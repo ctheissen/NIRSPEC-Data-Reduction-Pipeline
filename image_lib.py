@@ -227,13 +227,13 @@ def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, o
     #sys.exit()
     '''
     
-    obj_sum     = np.sum(obj[i, :] for i in obj_range)
-    flat_sum    = np.sum(flat[i, :] for i in obj_range)
+    obj_sum     = sum(obj[i, :] for i in obj_range)
+    flat_sum    = sum(flat[i, :] for i in obj_range)
     
     flat_sp     = flat_sum / len(obj_range)
 
-    sky_top_sum = np.sum(obj[i, :] for i in sky_range_top)
-    sky_bot_sum = np.sum(obj[i, :] for i in sky_range_bot)
+    sky_top_sum = sum(obj[i, :] for i in sky_range_top)
+    sky_bot_sum = sum(obj[i, :] for i in sky_range_bot)
     
     if len(sky_range_top) > 0:
         top_bg_mean = (sky_top_sum / len(sky_range_top)).mean()
@@ -276,7 +276,9 @@ def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, o
 
     spectrum_flux = np.nansum(obj_slit, axis=0)
     spectrum_var  = np.nansum(slit_var, axis=0)
-    spectrum_unc  = np.sqrt(np.abs(spectrum_var))
+    # variance of the subtracted background: slit_bg is the mean of the sky rows and is subtracted from every object row
+    spectrum_var += len(obj_range)**2 * slit_bgvar / sky_comb.shape[0]
+    spectrum_unc  = np.sqrt(spectrum_var)
 
     #print('S/N', spectrum_flux / spectrum_unc)
     #print('SNR', np.mean(np.absolute(spectrum_flux / spectrum_unc)))
@@ -301,9 +303,9 @@ def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, o
 
     sky_sp            = sky_mean - sky_mean.mean() # why this?
     
-    obj_noise_sum     = np.sum(noise[i, :] for i in obj_range)
-    sky_noise_top_sum = np.sum(noise[i, :] for i in sky_range_top)
-    sky_noise_bot_sum = np.sum(noise[i, :] for i in sky_range_bot)
+    obj_noise_sum     = sum(noise[i, :] for i in obj_range)
+    sky_noise_top_sum = sum(noise[i, :] for i in sky_range_top)
+    sky_noise_bot_sum = sum(noise[i, :] for i in sky_range_bot)
     
     k = float(np.square(len(obj_range))) / float(np.square((len(sky_range_top) + len(sky_range_bot))))
     '''
@@ -333,7 +335,7 @@ def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, o
     noise_sp = spectrum_unc
     
     if eta is not None:
-        #etalon_sum  = np.sum(eta[i, :] for i in obj_range) 
+        #etalon_sum  = sum(eta[i, :] for i in obj_range) 
         etalon_sum  = np.sum(eta[10:-10, :], axis=0)
         etalon_sub  = etalon_sum - np.median(etalon_sum) # put the floor at ~0
         etalon_norm = etalon_sub / np.max(etalon_sub) * 0.9 # normalize for comparison to synthesized etalon
@@ -342,7 +344,7 @@ def extract_spectra(obj, flat, noise, obj_range, sky_range_top, sky_range_bot, o
         return obj_sp, flat_sp, etalon_sp, sky_sp, noise_sp, top_bg_mean, bot_bg_mean
 
     if arc is not None:
-        #arclamp_sum  = np.sum(eta[i, :] for i in obj_range) 
+        #arclamp_sum  = sum(eta[i, :] for i in obj_range) 
         arclamp_sum  = np.sum(arc[10:-10, :], axis=0)
         arclamp_sub  = arclamp_sum - np.median(arclamp_sum) # put the floor at ~0
         arclamp_norm = arclamp_sub / np.max(arclamp_sub) * 0.9 # normalize for comparison to synthesized arc lamp
