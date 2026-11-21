@@ -635,7 +635,7 @@ def __extract_spectra(order, eta=None, arc=None):
         logger.info('frame AB extraction window width = {}'.format(str(len(order.objWindow['AB']))))
 
         # extract object spectrum from AB
-        order.objSpec['AB'] = np.sum(order.ffObjImg['AB'][i, :] for i in order.objWindow['AB']) 
+        order.objSpec['AB'] = sum(order.ffObjImg['AB'][i, :] for i in order.objWindow['AB']) 
         
         frames = ['A', 'B']
     else:

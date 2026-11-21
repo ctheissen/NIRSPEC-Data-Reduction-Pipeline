@@ -24,17 +24,24 @@ def calc_noise_img(obj, flat, integration_time, order):
         RN = 10.  # e-/pixel
         DC = 0.67 # e-/second/pixel
 
-    # Reimplementation of noise
+    # Variance image in (counts/s)^2, matching the counts/s spectra made in image_lib.extract_spectra.
+    # obj is the raw (not flat-fielded) image in ADU accumulated over the integration.
+    #   photon noise: |obj| / G                  (ADU^2; the photon variance is not reduced by multiple reads)
+    #   read noise:   2 RN^2 / numreads / G^2    per coadd (multiple correlated double sampling)
+    #   dark current: DC * t / G^2
+    # The flat-fielded image is obj / flat, so the variance is divided by flat^2.
+    # The earlier version (0.9.17.c13) multiplied the photon term by
+    # crtn = 1 - readtime * (numreads^2 - 1) / (3 * t * numreads) with readtime = RDITIME. RDITIME is close to the
+    # full integration time (e.g. 179.95 s for a 180 s frame), not the time of one read, so crtn was about -4.3 and the
+    # photon variance was negative. It was also divided by numreads and by flat only once. The absolute value taken
+    # after adding the sky variance hid the sign, and the noise was 2-4x too small, by a different factor in each pixel.
     coadds   = order.coadds
     numreads = order.numreads
-    readtime = order.readtime
-    divisor  = numreads * coadds
 
-    rdvar = (2. * RN ** 2) / numreads / coadds / integration_time ** 2 / G ** 2
-    crtn  = (1.0 - readtime * (numreads ** 2 - 1.0) / 3. / integration_time / numreads)
+    rdvar = coadds * 2. * RN ** 2 / numreads / G ** 2
+    dcvar = DC * integration_time / G ** 2
+    var   = (np.absolute(obj) / G + rdvar + dcvar) / np.square(flat) / integration_time ** 2
 
-    var   = np.absolute(obj/flat) * crtn / numreads / (coadds ** 2) / (integration_time ** 2) / G + rdvar # this is in counts/s
-    
     return var
 
 

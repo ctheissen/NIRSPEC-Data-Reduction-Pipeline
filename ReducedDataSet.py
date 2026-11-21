@@ -174,11 +174,16 @@ class ReducedDataSet:
 
 
     def getNReads(self):
-        return self.header['numreads']
+        # NUMREADS after the 2018 upgrade; MULTISPE (reads per sample) before it.
+        for key in ['numreads', 'multispe']:
+            if key in self.header:
+                return int(self.header[key])
+        return 1
 
 
     def getReadTime(self):
-        return self.header['rditime']
+        # RDITIME is not the time of one read (it is close to the integration time); not used in the noise calculation.
+        return self.header.get('rditime')
     
 
     def getDate(self):
